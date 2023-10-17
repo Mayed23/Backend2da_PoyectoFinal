@@ -1,0 +1,46 @@
+###
+POST  http://localhost:8080/api/products
+Content-Type: application/json
+           
+       
+   {
+            "name":"Filtro de Gasolina",
+            "model":"Lu-D-Mqx",
+            "price":15,
+            "img":"img11",
+            "code":"1240",
+            "category":"2",
+            "stock":"15"
+    }
+      
+
+###
+GET   http://localhost:8080/api/products/_652e90552274c45611fa49c3
+
+###
+GET   http://localhost:8080/api/products/_652e90552274c45611fa49c3
+ 
+
+###
+GET  http://localhost:8080/api/carts
+
+
+###
+POST http://localhost:8080/api/carts
+Content-Type: application/json
+
+{
+    "products": [], 
+    "quantity": 5,
+    "total": 44
+
+   
+}
+
+
+###
+GET  http://localhost:8080/api/carts/652e83679d8b1134b6186020
+
+###
+POST http://localhost:8080/api/carts/652b091e08c04721038bafab/product/652e8e50036de73c72e0be2b
+

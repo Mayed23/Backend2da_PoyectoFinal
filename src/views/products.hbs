@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Productos</h1>
+    <div class ="infoProduct">
+        <h1>Lista de Productos con Handlebars</h1>
+            <div class="detalleProd" >
+                <a href="/api/products/{{this.id}}">Ver Detalle</a>
+            <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Modelo</th>
+                    <th>Precio</th>
+                    <th>Imagen</th>
+                    <th>Código</th>
+                    <th>Categoría</th>
+                    <th>Stock</th>
+                    <th>Id</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{this.model}}</td>
+                        <td>{{this.price}}</td>
+                        <td><img src="{{this.img}}" alt="Imagen Producto"></td>
+                        <td>{{this.code}}</td>
+                        <td>{{this.category}}</td>
+                        <td>{{this.stock}}</td>      
+                        <td>{{this.id}}</td>                
+                        
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+            </div>
+        </div>
+<div>
+    {{#each product}}
+
+        <li><strong>Nombre: </strong>{{this.name}} - {{this.model}} </li>
+
+    {{/each}}
+    
+        <center>
+        {{#if hasPrevPage}}
+            <a href="/prduct?numPage={{prevPage}}"><button>Anterior</button></a>
+        {{/if}}
+
+        <label >{{page}}</label>
+      
+        {{#if hasNextPAge}}
+            <a href="/prduct?numPage={{nextPage}}"><button>Siguiente</button></a>
+        {{/if}}
+        </center>
+</div>
+    
+</body>
+</html>

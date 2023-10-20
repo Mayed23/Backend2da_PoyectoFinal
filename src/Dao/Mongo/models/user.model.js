@@ -17,7 +17,17 @@ const userSchema =  new Schema({
         required: true,
         unique: true
     },
-    gender: String
+    
+    age: Number,
+
+    password: {
+        type: String
+    },
+    role: {
+        type: String
+    }
+ 
+    // gender: String
     
 })
 

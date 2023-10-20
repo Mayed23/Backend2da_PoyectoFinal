@@ -6,8 +6,10 @@ const routerProducts = Router()
 const product = new productManagerMongo()
 
 routerProducts.get("/", async (req, res) =>{
+    const {limit= 5, page= 1, sort= 1, category} = req.query
+    const filtro = category ? {category} : {}
     try{
-        const products = await product.getProducts()
+        const products = await product.paginate(filtro, {limit: parseInt(limit), page: parseInt(page), sort: parseInt(sort), category: parseInt(category)})
         res.status(200). json(products)
     } catch(error){
         console.log(error)

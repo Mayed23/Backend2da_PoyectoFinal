@@ -15,14 +15,12 @@ router.get(`/`, async (req, res) => {
         console.log(error)
     }
 })
-
-router.post(`/`, async (req, res) => {
+router.get(`/:id`, async (req, res) => {
     try { 
-        const newUser  = req.body
-        let result = await userService.createUser(newUser)
+        let user = await userService.getUser(id)
         res.send({
-            status: `succes`,
-            payload: result
+            status: `success`,
+            payload: user
         })
     } catch (error) {
         console.log(error)
@@ -30,5 +28,30 @@ router.post(`/`, async (req, res) => {
 })
 
 
+router.post(`/`, async (req, res) => {
+    let newUser = req.body
+        try{
+            const addUser = await userService.createUser(newUser)
+            res.status(200).json(addUser)
+        }catch(error){
+            console.log(error)
+        }
+    })
 
-module.exports = router
+
+        // const { first_name, last_name, email, password, rol }= req.body
+
+        //     if (!first_name || !last_name || !email || !password || !rol) 
+          
+        //   return res.status(400).send({ status: 400, error: 'Faltan datos' })
+          
+        //     res.redirect("/login")
+        // } catch (error) 
+        // {
+        //     res.status(500).send("Error al acceder al registrar: " + error.message);
+        // }
+
+
+
+
+module.exports = router 

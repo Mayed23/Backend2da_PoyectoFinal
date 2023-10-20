@@ -41,7 +41,7 @@ module.exports = class cartsManagerMongo {
         }
       };
     
-      deletCarts = async (id) => {
+      deleteCarts = async (id) => {
         try {
           const cartId = await this.model.cart.findById(id);
           if (!cartId) {

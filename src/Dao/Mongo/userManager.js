@@ -20,8 +20,22 @@ class userManagerMongo {
             console.log(error)
         }
     }
-    async createUser(newUser){
-        return await this.model.create(newUser)
+    async createUser(newUser)
+    {
+           try 
+            {
+            let { first_name, last_name, email, password, role }= newUser;
+
+            if(!first_name || !last_name || !email || !password || !role) 
+
+            return `Ingrese todos los campos`
+            const user = await this.model.create(newUser);   
+            if(user)          
+            return user;
+            } catch (error) {
+              console.error('Error al agregar el usuario:', error);
+              return 'Error al agregar el usuario';
+            }       
     }
     async updateUser(){}
     async deleteUser(){}

@@ -25,9 +25,9 @@ module.exports = class productManagerModel {
     return product;
   };
 
-  getProducts = async () => {
+  getProducts = async ({limit=5, page=1, sort=1, category}) => {
     try {
-      const allProducts = await this.model.find({});
+      const allProducts = await this.model.paginate({}, {limit, page, sort, category, lean:true});
       return allProducts;
     } catch (error) {
       return error;

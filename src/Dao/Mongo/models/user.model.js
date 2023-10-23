@@ -12,14 +12,15 @@ const userSchema =  new Schema({
     last_name: {
         type: String
     },
+
+    age: Number,
+
     email: {
         type: String,
         required: true,
         unique: true
-    },
+    },  
     
-    age: Number,
-
     password: {
         type: String
     },
@@ -30,6 +31,8 @@ const userSchema =  new Schema({
     // gender: String
     
 })
+
+
 
 const userModel = model(collection, userSchema)
 

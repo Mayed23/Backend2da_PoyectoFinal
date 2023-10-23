@@ -20,13 +20,15 @@ class userManagerMongo {
             console.log(error)
         }
     }
+
+
     async createUser(newUser)
     {
            try 
             {
-            let { first_name, last_name, email, password, role }= newUser;
+            let { first_name, last_name, age, email, password, role }= newUser;
 
-            if(!first_name || !last_name || !email || !password || !role) 
+            if(!first_name || !last_name || !age || !email || !password || !role) 
 
             return `Ingrese todos los campos`
             const user = await this.model.create(newUser);   
@@ -37,8 +39,49 @@ class userManagerMongo {
               return 'Error al agregar el usuario';
             }       
     }
-    async updateUser(){}
-    async deleteUser(){}
+
+    async getUsersByEmail(email){
+        try{
+            return await this.model.findOne({email: email})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async changePassword(email, password){
+        try{
+            return await this.model.findOneAndUpdate({email: email}, {password: newPassword} )
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async updateUser(id, userId){
+        try{
+            const user = await this.model.findById(id)
+            if(!user){
+                return `Usuario no encontrado`
+            }
+            user.set(userId)
+            await user.save()
+        }catch (error){
+            return `Error cambios no realizados`
+        }
+    }
+
+    async deleteUser(id){
+        try{
+            const user = await this.model.findById(id)
+            if(!user){
+                return `Usuario no encontrado`
+            }
+            await user.deleteOne()
+            return `El ususario fue eliminado con Exito`
+        }catch (error){
+            console.error(`Error!!, usuario no eliminado:`, error)
+            return `Error!!, usuario no eliminado`
+        }
+    }
 }
 
 module.exports = { userManagerMongo }

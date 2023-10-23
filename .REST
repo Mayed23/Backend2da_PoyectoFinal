@@ -15,7 +15,8 @@ Content-Type: application/json
       
 
 ###
-GET   http://localhost:8080/api/products/_652e90552274c45611fa49c3
+GET   http://localhost:8080/api/products/_652e8dbb036de73c72e0be29
+
 
 ###
 GET   http://localhost:8080/api/products/_652e90552274c45611fa49c3

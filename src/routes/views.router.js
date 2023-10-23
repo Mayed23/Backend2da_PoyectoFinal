@@ -9,7 +9,8 @@ const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
 
 
 const viewsRouter = Router()
-
+const prod =  new productManagerModel()
+const servCart = new cartsManagerMongo()
 
 
 viewsRouter.get(`/login`, async (req, res) =>{
@@ -63,50 +64,65 @@ viewsRouter.post(`/messages`, uploader.single(`file`), (req, res) =>{
 
 })
 
-viewsRouter.get(`/product`, async (req, res) => {
+viewsRouter.get(`/products`, async (req, res) => {
+    const {limit, page, sort, category, status} = req.query
+    try{
+        const options = { 
+            limit: limit || 10, 
+            page: page || 1, 
+            sort: { price: sort === "asc" ? 1 : -1,}, 
+            lean: true
+        }
+        if (status != undefined) {
+            const products = await prod.getProducts({status: status}, options)
+            res.status(200). json(products)
+        }
+        if (category != undefined) {
+            const products = await prod.getProducts({category: category}, options)
+            res.status(200). json(products)
+        } 
 
-    const { limit, numPage, sort, category} =req.params
-    let servProds = new productManagerModel()
-    const {
-        docs,
-        hasPrevPage,
-        hasNextPage,
-        prevPage,
-        nextPage,
-        page,
-        totalPage
-    } = await servProds.getProducts({limit, numPage, sort: {price: sort}, category, lean: true})
-    // console.log(docs)
-    // console.log(hasPrevPage)
-    // console.log(hasNextPage)
-    // console.log(prevPage)
-    // console.log(nextPage)
-    res.status(200).render(`products`, {
+        const products = await prod.getProducts({}, options)
+        console.log(products)
+        const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = products
+        res.render("products",{
+            status: "success", 
+            products: docs,
+            totalPages,
+            prevPage,
+            nextPage,
+            page: products.page,
+            hasPrevPage,
+            hasNextPage
         
-        products: docs,       
-        hasPrevPage,
-        hasNextPage,
-        prevPage,
-        nextPage,
-        page,
-        totalPage
-    })
+       })
+    }catch (error) {
+        console.log(error)
+    }
 })    
 
-viewsRouter.get(`/carts`,(req, res) =>{
-    let servCart = new cartsManagerMongo()
-    console.log (servCart)
-        res.status(200).render(`carts`)
+viewsRouter.get("/product/:id", async (req, res) => {
+    const prodId = req.params.id
+    try{
+        const product = await prod.getProductById(prodId)
+        console.log(prodId)
+        res.render("itemDetail", product)
+    }catch(error){
+        console.log(error)
+    }
 })
 
-
-  
-
-
-
-
-
-
+viewsRouter.get(`/carts/:cid`, async (req, res) =>{
+    const cid = req.params
+      try{
+        const cart = await servCart.addProductToCart(cid)
+        if(!cart) 
+            return res.status(404).json({msg: "Carrito no Existe"})
+            res.render("carts", { prodId: cart.products})
+    }catch(error){
+        console.log(error)
+    }
+})    
 
 viewsRouter.get(`/contacto`, (req, res)=>{
     res.render(`contactos`)

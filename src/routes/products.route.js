@@ -6,57 +6,76 @@ const routerProducts = Router()
 const product = new productManagerMongo()
 
 routerProducts.get("/", async (req, res) =>{
-    const {limit= 5, page= 1, sort= 1, category} = req.query
-    const filtro = category ? {category} : {}
+    const {limit, page, sort, category, status} = req.query
     try{
-        const products = await product.paginate(filtro, {limit: parseInt(limit), page: parseInt(page), sort: parseInt(sort), category: parseInt(category)})
-        res.status(200). json(products)
-    } catch(error){
+        const options = { 
+            limit: limit || 10, 
+            page: page || 1, 
+            sort: { price: sort === "asc" ? 1 : -1,}, 
+            lean: true
+        }
+        if (status != undefined) {
+            const products = await product.getProducts({status: status}, options)
+            res.status(200). json(products)
+        }
+        if (category != undefined) {
+            const products = await product.getProducts({category: category}, options)
+            res.status(200). json(products)
+        } 
+
+        const products = await product.getProducts({}, options)
+        console.log(products)
+        const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = products
+        res.status(200).json({
+            status: "success", 
+            products: docs,
+            totalPages,
+            prevPage,
+            nextPage,
+            page: products.page,
+            hasPrevPage,
+            hasNextPage
+        
+       })
+    }catch (error) {
         console.log(error)
     }
-  
+})       
+
+
+routerProducts.get("/:id",  async (req, res) =>{
+    res.send(await product.getProductById(req.params.id))
 })
 
-routerProducts.get("/:_id",  async (req, res) =>{
-    let _id = req.params._id
-    try{
-        const product = await product.getProductById(_id)
-
-        res.status(200).json(product)
-    }catch(error){
-        console.log(error)
-    }
-})
- 
 
 routerProducts.post("/", async (req, res) => {
     let newProduct = req.body
     try{
-        const addProduct = await product.addProducts(newProduct)
-        res.status(200).json(addProduct)
+        const prodNew = await product.addProducts(newProduct)
+        res.status(200).json(prodNew)
     }catch(error){
         console.log(error)
     }
 })   
 
-routerProducts.put("/:_id", async (req, res) =>{
+routerProducts.put("/:id", async (req, res) =>{
     let id = req.params.id
     let updateProd = req.body
     try{
-        await prd.updateProduct(id, updateProd)
-        const product = await product.getProductById(id)
+        await product.updateProductsById(id, updateProd)
+        const prodOne = await product.getProductById(id)
         res.status(200).json({
-           msg: `Producto Actualizado`, product
+           msg: `Producto Actualizado`, prodOne
         })
     }catch(error){
         console.log(error)
     }
-}) 
+})
 
-routerProducts.delete("/:_id", async (req, res) =>{
+routerProducts.delete("/:id", async (req, res) =>{
     let id = req.params.id
     try{
-        await prd.deleteProduct(_id)
+        await product.deleteProducts(id)
         res.status(200).json({
             msg: `Producto Eliminado con Exito`})
     } catch(error){
@@ -64,5 +83,6 @@ routerProducts.delete("/:_id", async (req, res) =>{
     }
     
 })
+
 
 module.exports = routerProducts

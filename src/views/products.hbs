@@ -13,12 +13,14 @@
 
     {{#each products}}
         <div class="card-product">
-            <img src={{this.thumbnail}} class="card-img-top  imgRepuesto" alt="">
+            <img src={{this.thumbnail}} class="card-img-top " alt="">
                 <div class="card-body">
-                    <h3> Nombre: {{this.name}}</h3>
-                    <h4> Modelo: {{this.model}}</h4>
+                    <h3> Nombre: {{this.title}}</h3>
+                    <h4> Modelo: {{this.description}}</h4>
                     <p>US$ {{this.price}}</p>
-                    <button class="btn btn-blue">Detalles</button>
+                    <a href="/product/{{this.id}}">
+                        <button class="btn btn-blue">Detalles</button>
+                    </a>
                 </div>   
         </div>
    

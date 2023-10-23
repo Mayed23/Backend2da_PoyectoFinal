@@ -1,5 +1,5 @@
 const multer = require (`multer`)
-const { dirname } = require(`node:path`)
+const { dirname } = require(`path`)
 
 
 const storage = multer.diskStorage({

@@ -1,6 +1,7 @@
 const { Router } = require(`express`)
 const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
-const { userModel } = require("../Dao/Mongo/models/user.model.js")
+const { authenticate, Passport } = require("passport")
+const passport = require("passport")
 
 
 
@@ -8,7 +9,7 @@ const sessionsRouter = Router()
 const userReg = new userManagerMongo()
 
 
-sessionsRouter.post(`/register`, async (req, res)=>{
+sessionsRouter.post(`/register`, passport.authenticate(`register`, {failureRedirect: `/failregister`}), async (req, res)=>{
   
     try{
         const newUser = req.body
@@ -17,7 +18,7 @@ sessionsRouter.post(`/register`, async (req, res)=>{
         res.redirect(`register`)
     
         }catch(error) {
-        console.log(error)
+        res.status(500).send(`Error en el registrio:` + error.message) 
     }
     
 })

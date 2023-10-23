@@ -1,32 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle Producto</title>
-    <link rel="stylesheet" href="">
-</head>
-<body>
-
-    <div class="Carrito">
-        <p>Carrito ID: {{carts._id}}</p>
+<div class="Carrito">
+        <p>Carrito ID: {{this.carts}}</p>
         <h2>Productos en el carrito:</h2>
         <ul>
-            {{#each carts.product}}
+            {{#each product}}
                 <li>
-                    <p>Producto ID: {{this.productId._id}}</p>
-                    <p>Descripción: {{this.productId.description}}</p>
-                    <p>Precio: ${{this.productId.price}}</p>
+                    <p>Nombre: {{this.prodId.title}}</p>
+                    <p>Descripción: {{this.prodId.description}}</p>
+                    <p>Precio: ${{this.prodId.price}}</p>
                     <p>Cantidad: {{this.quantity}}</p>
                 </li>
             {{/each}}
         </ul>
     </div>
-
-    
-
-    <footer>
-        
-    </footer>
-</body>
-</html>

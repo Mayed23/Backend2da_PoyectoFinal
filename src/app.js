@@ -1,6 +1,7 @@
 const express = require (`express`)
 const handlebars = require (`express-handlebars`)
 const path = require (`path`)
+const { server, Server } = require (`socket.io`)
 
 const cookieParser = require (`cookie-parser`)
 const session = require (`express-session`)
@@ -9,6 +10,7 @@ const  MongoStore  = require (`connect-mongo`)
 
 const { connectDb } = require(`./config/confi.js`)
 const routerApp = require (`../src/routes`)
+const { Socket } = require("dgram")
 
 
 const app = express()
@@ -50,6 +52,9 @@ app.set(`views`, __dirname + `/views`)
 
 app.use(`/`,express.static(path.join(__dirname, '/public')));
 
+
+
+
 //cookies
 
 //app.use(cookieParser(`f1rm@un1k@`))
@@ -78,6 +83,13 @@ app.use(`/`,express.static(path.join(__dirname, '/public')));
 
 app.use(routerApp)
 
-app.listen(PORT, () => {
+//Configuración  del Socket
+
+// app.listen(PORT, () => {
+//     console.log(`Server listen on port ${PORT}`)
+// })
+
+const httpServer = app.listen(PORT, () => {
     console.log(`Server listen on port ${PORT}`)
 })
+const socketServer = new Server(httpServer)

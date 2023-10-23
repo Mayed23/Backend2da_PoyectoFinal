@@ -17,6 +17,7 @@ router.get(`/`, async (req, res) => {
 })
 router.get(`/:id`, async (req, res) => {
     try { 
+        let id= req.params.id 
         let user = await userService.getUser(id)
         res.send({
             status: `success`,
@@ -25,6 +26,27 @@ router.get(`/:id`, async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+})
+
+router.get(`/:email`, async (req, res) => {
+    try { 
+        let email = req.params.email
+        let user = await userService.getUsersByEmail(email)
+        res.send({
+            status: `success`,
+            payload: user
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.put(`/:id`, async (req, res) => {
+   let id= req.params.id
+   let updateUser = req.body
+   res.send(await userService.updateUser(id, updateUser))
+   console.log(updateUser)
+
 })
 
 
@@ -36,21 +58,13 @@ router.post(`/`, async (req, res) => {
         }catch(error){
             console.log(error)
         }
-    })
+})
 
-
-        // const { first_name, last_name, email, password, rol }= req.body
-
-        //     if (!first_name || !last_name || !email || !password || !rol) 
-          
-        //   return res.status(400).send({ status: 400, error: 'Faltan datos' })
-          
-        //     res.redirect("/login")
-        // } catch (error) 
-        // {
-        //     res.status(500).send("Error al acceder al registrar: " + error.message);
-        // }
-
+router.delete(`/:id`, async (req, res) => {
+    let id= req.params.id
+    res.send(await userService.deleteUser(id))
+      
+})
 
 
 

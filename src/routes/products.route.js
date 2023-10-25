@@ -47,6 +47,9 @@ routerProducts.get("/:id",  async (req, res) =>{
     res.send(await product.getProductById(req.params.id))
 })
 
+routerProducts.get("/:limit",  async (req, res) =>{
+    res.send(await product.getProductsLimit(req.query.limit))
+})
 
 routerProducts.post("/", async (req, res) => {
     let newProduct = req.body
@@ -68,7 +71,8 @@ routerProducts.put("/:id", async (req, res) =>{
            msg: `Producto Actualizado`, prodOne
         })
     }catch(error){
-        console.log(error)
+        return `Cambios no realizados`
+        // console.log(error)
     }
 })
 

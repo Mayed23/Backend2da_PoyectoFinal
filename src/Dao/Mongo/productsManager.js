@@ -26,35 +26,25 @@ module.exports = class productManagerModel {
   };
 
   getProducts = async (query, options) => {
-    try {
       const allProducts = await this.model.paginate(query, options);
-      return allProducts;
-    } catch (error) {
-      return error;
-    }
+      return allProducts; 
   };
 
   getProductById = async (pid) => {
-    try{
-      return await this.model.findOne({_id: pid})
-    } catch (error) {
-      console.log(error)
-    }
+        const product = await this.model.findById(pid)
+        if(!product) return `producto no encontrado`
+        return product
   };
   
 
   getProductsLimit = async (limit) => {
-    try {
       const products = await this.model.find().limit(limit);
       const productsList = [];
       for (let i = 0; 1 < limit; i++) {
         productsList.push(products[i]);
       }
-
       return productsList();
-    } catch (error) {
-      return error;
-    }
+    
   };
   exist = async (id) => {
     let product = await this.model.findById(id);
@@ -62,31 +52,21 @@ module.exports = class productManagerModel {
   };
 
   updateProductsById = async (id, product) => {
-    try{
       const prod = await this.model.findById(id)
       if(!prod){
           return `Producto no encontrado`
       }
       prod.set(product)
       await prod.save()
-  }catch (error){
-      return `Error! cambios no realizados`
   }
-}
-
-
 
   deleteProducts = async (id) => {
-    try {
       const product = await this.model.findById(id);
       if (!product) {
         return `Producto no existe`;
       }
       await this.model.deleteOne(product);
       return `Producto eliminado con exito`;
-    } catch (error) {
-      return `error al elimina vuelva intentarlos.`;
-    }
   };
   
   //funciona y muestra el array en consola, verificar la ruta.....(Paginate)

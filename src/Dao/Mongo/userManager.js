@@ -41,13 +41,10 @@ class userManagerMongo {
     }
 
     async getUsersByEmail(email){
-        try{
-            return await this.model.findOne({email: email})
-        } catch (error) {
-            console.log(error)
-        }
+       const user = await this.model.findOne({email: email})
+       return user
     }
-
+        
     async changePassword(email, password){
         try{
             return await this.model.findOneAndUpdate({email: email}, {password: newPassword} )

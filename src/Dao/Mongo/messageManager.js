@@ -1,4 +1,4 @@
-const { messageModel } = require("./models/messages.model.js")
+const { messageModel } = require("../Mongo/models/message.model.js")
 
 class messageManagerMongo {
     constructor(){
@@ -7,7 +7,8 @@ class messageManagerMongo {
 
     async getMessages(){
         try{
-            return await this.model.find().lean().exec()
+            const message = await this.model.find().lean().exec()
+            return message
         } catch (error){
             return (error)
             
@@ -16,7 +17,8 @@ class messageManagerMongo {
 
     async createMessage() {
         try{
-            return await this.model.createMessage(message)
+            const newMessage = await this.model.createMessage(message)
+            return(newMessage) 
         } catch (error){
             return (error)
         }

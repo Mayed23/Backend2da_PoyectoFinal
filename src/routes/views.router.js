@@ -1,9 +1,11 @@
 const { Router } = require(`express`)
 const { uploader } = require(`../utils/multer.js`)
-//const messageManagerMongo = require(`../views/message.js`)
+const { messageManagerMongo } = require(`../Dao/Mongo/messageManager.js`)
 const product = require(`../Dao/Mongo/models/products.model.js`)
 const productManagerModel = require (`../Dao/Mongo/productsManager.js`)
 const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
+const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
+
 
 
 
@@ -11,15 +13,73 @@ const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
 const viewsRouter = Router()
 const prod =  new productManagerModel()
 const servCart = new cartsManagerMongo()
+const msg = new messageManagerMongo()
+const userReg = new userManagerMongo()
+
 
 
 viewsRouter.get(`/login`, async (req, res) =>{
-    res.render(`login`)
+    try{
+        res.render(`login`)
+    }catch(error){
+        console.log(error)
+    }
+})
+viewsRouter.post(`/login`, async (req, res) =>{
+    const { email, password } = req.body
+      try{
+        const confirUser = await userReg.getUsersByEmail(email)
+        if(confirUser.password === password){
+            if(confirUser.role === `admin`){
+                req.session.emailUser = email
+                req.session.nameUser = confirUser.first_name
+                req.session.lastNaUser =  confirUser.last_name
+                req.session.roleUser = confirUser.role
+                res.redirect(`/profile`)
+            }else{
+                req.session.emailUser = email
+                req.session.roleUser = confirUser.role
+                res.redirect(`/users`)
+
+            }
+        }else{
+            res.redirect(`/profile`)
+        }
+    }catch(error){
+        console.log(error)
+    }
 })
 
+
+
 viewsRouter.get(`/register`, async (req, res) =>{ 
-    res.render(`register`)
+    try {
+      res.render(`register`);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+viewsRouter.post(`/register`, async (req, res) => {
+    const {first_name, last_name, age, email, password} = req.body
+    try{
+        const user = await userReg.getUsersByEmail(email)
+        if(user){
+            return res.render(`register`, {error: `el ${email} ya existe`})
+        }
+        if(!first_name || !last_name || !age || !email || !password){
+            return res.render(`register`, {error: `Ingrese todos los datos`})
+        }
+        const newUser = await userReg.createUser(newUser)
+        console.log(newUser)
+        res.redirect(`/login`)
+    
+        }catch(error) {
+        console.log(error)
+        }
 })
+      
+
 
 viewsRouter.get(`/profile`, async (req, res) =>{
 
@@ -57,12 +117,18 @@ viewsRouter.get(`/messages`, (req, res) => {
     res.render(`message`)
 })
 
-viewsRouter.post(`/messages`, uploader.single(`file`), (req, res) =>{
-    if(!req.file) return res.status(400).send({status: `error`, error: `No se pudo enviar el mensaje`})
-    res.send({status: `success`, payload: `mensaje enviado`})
+viewsRouter.post(`/messages`, async (req, res)=>{
+    const newMessage = req.body
 
-
+    await msg.createMessage(newMessage)
+    console.log (message)
 })
+// viewsRouter.post(`/messages`, uploader.single(`file`), (req, res) =>{
+//     if(!req.file) return res.status(400).send({status: `error`, error: `No se pudo enviar el mensaje`})
+//     res.send({status: `success`, payload: `mensaje enviado`})
+
+
+// })
 
 viewsRouter.get(`/products`, async (req, res) => {
     const {limit, page, sort, category, status} = req.query

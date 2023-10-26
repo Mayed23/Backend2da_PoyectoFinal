@@ -18,7 +18,7 @@ router.get(`/`, async (req, res) => {
 router.get(`/:id`, async (req, res) => {
     try { 
         let id= req.params.id 
-        let user = await userService.getUser(id)
+        let user = await userService.getUserById(id)
         res.send({
             status: `success`,
             payload: user
@@ -31,7 +31,8 @@ router.get(`/:id`, async (req, res) => {
 router.get(`/:email`, async (req, res) => {
     try { 
         let email = req.params.email
-        let user = await userService.getUsersByEmail(email)
+        let user = await userService.getUserByEmail({email: email})
+        console.log(user)
         res.send({
             status: `success`,
             payload: user

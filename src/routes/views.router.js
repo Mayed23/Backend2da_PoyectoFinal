@@ -1,13 +1,9 @@
 const { Router } = require(`express`)
 const { uploader } = require(`../utils/multer.js`)
 const { messageManagerMongo } = require(`../Dao/Mongo/messageManager.js`)
-const product = require(`../Dao/Mongo/models/products.model.js`)
 const productManagerModel = require (`../Dao/Mongo/productsManager.js`)
 const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
 const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
-
-
-
 
 
 const viewsRouter = Router()
@@ -25,32 +21,36 @@ viewsRouter.get(`/login`, async (req, res) =>{
         console.log(error)
     }
 })
-viewsRouter.post(`/login`, async (req, res) =>{
+viewsRouter.post(`/login`, async (req, res)=>{
     const { email, password } = req.body
-      try{
-        const confirUser = await userReg.getUsersByEmail(email)
-        if(confirUser.password === password){
-            if(confirUser.role === `admin`){
-                req.session.emailUser = email
-                req.session.nameUser = confirUser.first_name
-                req.session.lastNaUser =  confirUser.last_name
-                req.session.roleUser = confirUser.role
-                res.redirect(`/profile`)
-            }else{
-                req.session.emailUser = email
-                req.session.roleUser = confirUser.role
-                res.redirect(`/users`)
-
-            }
-        }else{
-            res.redirect(`/profile`)
+    try{
+        const user = await userReg.getUser(email, password)
+            if (!user || user.password !== password)    {
+            return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
         }
+        const {first_name, last_name, age, email: emailUser} = user
+            if (email === email.user || password === password.user){
+            req.session.user={
+                first_name,
+                last_name,
+                age,
+                email: emailUser,
+                role: `admin`
+            }
+        } else{
+            req.session.user={
+                first_name,
+                last_name,
+                age,
+                email: emailUser,
+                role: `user`
+            }
+        }
+        return res.send({user: req.session.user})
     }catch(error){
         console.log(error)
-    }
-})
-
-
+    }    
+})       
 
 viewsRouter.get(`/register`, async (req, res) =>{ 
     try {
@@ -61,13 +61,13 @@ viewsRouter.get(`/register`, async (req, res) =>{
 });
 
 viewsRouter.post(`/register`, async (req, res) => {
-    const {first_name, last_name, age, email, password} = req.body
+    const {first_name, last_name, age, email, password, role} = req.body
     try{
         const user = await userReg.getUsersByEmail(email)
         if(user){
             return res.render(`register`, {error: `el ${email} ya existe`})
         }
-        if(!first_name || !last_name || !age || !email || !password){
+        if(!first_name || !last_name || !age || !email || !password || !role){
             return res.render(`register`, {error: `Ingrese todos los datos`})
         }
         const newUser = await userReg.createUser(newUser)
@@ -78,11 +78,11 @@ viewsRouter.post(`/register`, async (req, res) => {
         console.log(error)
         }
 })
-      
-
-
+    
 viewsRouter.get(`/profile`, async (req, res) =>{
-
+    if(!req.session.emailUser){
+        return res.redirect(`login`)
+    }
     res.render(`profile`, {
         first_name: req.session.nameUser,
         last_name: req.session.lastNaUser,

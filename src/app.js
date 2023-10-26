@@ -53,9 +53,6 @@ app.set(`views`, __dirname + `/views`)
 
 app.use(`/`,express.static(path.join(__dirname, '/public')));
 
-
-
-
 //cookies
 
 //app.use(cookieParser(`f1rm@un1k@`))

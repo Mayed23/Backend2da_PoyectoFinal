@@ -8,5 +8,6 @@ const isValidPass = (password, user) => bcrypt.compareSync(password, user.passwo
 
 
 module.exports = {
-    createHash, isValidPass
+    createHash, 
+    isValidPass
 }

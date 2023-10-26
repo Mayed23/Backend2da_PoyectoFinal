@@ -13,15 +13,22 @@ class userManagerMongo {
         }
     }
 
-    async getUser(uid){
+    async getUserById(uid){
         try{
-            return await this.model.findOne({_id: uid})
+            return await this.model.findById({_id: uid})
         } catch (error) {
             console.log(error)
         }
     }
 
+    async getUserByEmail(email){
+        try{
+            return await this.model.findOne({email: email})
+        }catch(error){
+            console.log(error)
+        }
 
+    }
     async createUser(newUser)
     {
            try 
@@ -40,11 +47,11 @@ class userManagerMongo {
             }       
     }
 
-    async getUsersByEmail(email){
-       const user = await this.model.findOne({email: email})
-       return user
+    async getEmail(param){
+        const user = await this.model.findOne(param)
+        return user
     }
-        
+
     async changePassword(email, password){
         try{
             return await this.model.findOneAndUpdate({email: email}, {password: newPassword} )

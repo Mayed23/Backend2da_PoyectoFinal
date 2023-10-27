@@ -1,82 +1,46 @@
 const { Router } = require(`express`)
-const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
-const { userModel } = require("../Dao/Mongo/models/user.model.js")
-const { create } = require("connect-mongo")
-const { createHash, isValidPass } = require("../utils/hash.js")
-// const { authenticate, Passport } = require("passport")
-// const passport = require("passport")
+const { userManagerMongo } = require(`../Dao/Mongo/userManager.js`)
+const { create } = require(`connect-mongo`)
+const { createHash, isValidPass } = require(`../utils/hash.js`)
+const passport = require(`passport`)
 
 
 
 const sessionsRouter = Router()
 const userReg = new userManagerMongo()
 
-sessionsRouter.post(`/login`, async (req, res)=>{
-    const { email, password } = req.body
-    console.log(email,password)
-    try{
-        const user = await userReg.getEmail({email})
-        if (!user || user.password !== password){
-            return res.status(404).json({status: `error`, error: `Usuario no encontrado`})
-        }
-        if(!isValidPass(password, user)) return res.status(401).send({status: `error`, error: `Password incorrecto`})
+sessionsRouter.post(`/login`, passport.authenticate(`login`, {failureRedirect: `faillogin`}), async (req, res)=>{
+    if(!req.user) return res.status(400).send({status: `error`, message: `Error, usurio incorrecto`})
+    const { firts_name, last_name, age, email } = req.user;
 
-        const {first_name, last_name, age, email: emailUser} = user
-        if (email === email.user || password === password.user){
-            req.session.user={
-                first_name,
-                last_name,
-                age,
-                email: emailUser,
-                role: `admin`
-            }
-        } else{
-            req.session.user={
-                first_name,
-                last_name,
-                age,
-                email: emailUser,
-                role: `user`
-            }
-        }
-        return res.json({user: req.session.user})
-    }catch(error){
-        console.log(error)
-    }    
-
-})     
-
-
-sessionsRouter.post(`/register`,async (req, res)=>{
-  
-    const {first_name, last_name, age, email, password, role} = req.body
-    try{
-
-        if(!first_name || !last_name || !age || !email || !password || !role){
-            return res.status(404).json({error: `Ingrese todos los datos`})
-        }
-        const user = await userReg.getUserByEmail(email)
-        if(user){
-            return res.status(404).json({error: `el ${email} ya existe`})
-        }
-        
-        const newUser = await userReg.createUser({
+        req.session.user={
             first_name,
             last_name,
             age,
-            email,            
-            password: createHash(password),
-            role
-          })
-        console.log(newUser)
-        res.redirect(`/login`)
-        
-        }catch(error) {
-            console.log(error)
-        res.status(500).send(`Error en el registrio:` + error.message) 
-    }
-    
+            email,
+        }
+     res.send({ status:`success`, payload: req.user})   
+
+})  
+
+
+sessionsRouter.get(`/faillogin`, (req, res) => {
+    res.send({ error: `Error, usurio incorrecto`});
+  });
+
+
+
+
+sessionsRouter.post(`/register`, passport.authenticate(`register`, {
+    failureRedirect:`/failregister`}), async (req, res)=>{
+        res.send({status: `success`, message: `El registro fue exitoso`})
+      
 })
+sessionsRouter.get(`/fileregister`, async (req,res) => {
+    console.log(`Faile strategy`)
+    res.status(401).send({ status: `error`, message: `Error!!, Ususario no registrado`})
+})
+
 
    
 sessionsRouter.get(`/logout`, async (req, res) =>{
@@ -93,12 +57,11 @@ sessionsRouter.get(`/logout`, async (req, res) =>{
         
 })
 
+sessionsRouter.get(`/github`, passport.authenticate(`github`, { scope: [`user:email`] }), async (req, res) => { });
 
-
-
-
-
-
-
+sessionsRouter.get(`/githubcallback`, passport.authenticate(`github`, { failureRedirect: `login` }), async (req, res) => {
+  req.session.user = req.user;
+  res.redirect(`/profile`);
+});
 
 module.exports = sessionsRouter

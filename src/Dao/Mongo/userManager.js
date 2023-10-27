@@ -13,6 +13,14 @@ class userManagerMongo {
         }
     }
 
+    async getUser(filter){
+        try{
+            return await this.model.findOne(filter)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     async getUserById(uid){
         try{
             return await this.model.findById({_id: uid})

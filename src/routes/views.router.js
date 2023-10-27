@@ -2,8 +2,9 @@ const { Router } = require(`express`)
 const { uploader } = require(`../utils/multer.js`)
 const { messageManagerMongo } = require(`../Dao/Mongo/messageManager.js`)
 const productManagerModel = require (`../Dao/Mongo/productsManager.js`)
-const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
-const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
+const cartsManagerMongo = require(`../Dao/Mongo/cartsManager.js`)
+const { userManagerMongo } = require(`../Dao/Mongo/userManager.js`)
+const { createHash } = require(`../utils/hash.js`)
 
 
 const viewsRouter = Router()
@@ -70,9 +71,17 @@ viewsRouter.post(`/register`, async (req, res) => {
         if(!first_name || !last_name || !age || !email || !password || !role){
             return res.render(`register`, {error: `Ingrese todos los datos`})
         }
-        const newUser = await userReg.createUser(newUser)
-        console.log(newUser)
-        res.redirect(`/login`)
+        const newUser = await userReg.createUser({
+           
+                first_name,
+                last_name,
+                age,
+                email,
+                password: createHash(password),
+                role
+        })
+            console.log(newUser)
+            res.redirect(`/login`)
     
         }catch(error) {
         console.log(error)
@@ -101,6 +110,33 @@ viewsRouter.get(`/logout`, async (req, res) =>{
     })
     
 })
+
+viewsRouter.get(`/resetpassword`, async (req, res) => {
+        try {
+            res.render(`resetPassword`);
+            } catch (error) {
+            console.log(error);
+        }
+});
+  
+viewsRouter.post(`/resetpassword`, async (req, res) => {
+        const { email, password } = req.body;
+            try {
+            
+            const user = await userReg.getUserByEmail(email);
+            if (!user) return res.render(`resetPassword`, { error: `El usuario con el mail ${email} no existe` });
+                    
+            await userReg.changePassword(email, createHash(password));
+        
+            res.redirect(`/login`);
+            
+            } catch (error) {
+            console.log(error);
+            }
+})
+
+
+
 
 viewsRouter.get(`/subirarch`, (req, res) => {
     res.render(`subirArch`)
@@ -136,7 +172,7 @@ viewsRouter.get(`/products`, async (req, res) => {
         const options = { 
             limit: limit || 10, 
             page: page || 1, 
-            sort: { price: sort === "asc" ? 1 : -1,}, 
+            sort: { price: sort === `asc` ? 1 : -1,}, 
             lean: true
         }
         if (status != undefined) {
@@ -151,8 +187,8 @@ viewsRouter.get(`/products`, async (req, res) => {
         const products = await prod.getProducts({}, options)
         console.log(products)
         const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = products
-        res.render("products",{
-            status: "success", 
+        res.render(`products`,{
+            status: `success`, 
             products: docs,
             totalPages,
             prevPage,
@@ -167,12 +203,12 @@ viewsRouter.get(`/products`, async (req, res) => {
     }
 })    
 
-viewsRouter.get("/product/:id", async (req, res) => {
+viewsRouter.get(`/product/:id`, async (req, res) => {
     const prodId = req.params.id
     try{
         const product = await prod.getProductById(prodId)
         console.log(prodId)
-        res.render("itemDetail", product)
+        res.render(`itemDetail`, product)
     }catch(error){
         console.log(error)
     }
@@ -183,8 +219,8 @@ viewsRouter.get(`/carts/:cid`, async (req, res) =>{
       try{
         const cart = await servCart.addProductToCart(cid)
         if(!cart) 
-            return res.status(404).json({msg: "Carrito no Existe"})
-            res.render("carts", { prodId: cart.products})
+            return res.status(404).json({msg: `Carrito no Existe`})
+            res.render(`carts`, { prodId: cart.products})
     }catch(error){
         console.log(error)
     }

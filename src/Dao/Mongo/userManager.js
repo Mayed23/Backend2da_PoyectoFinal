@@ -55,12 +55,12 @@ class userManagerMongo {
             }       
     }
 
-    async getEmail(param){
-        const user = await this.model.findOne(param)
-        return user
-    }
+    // async getEmail(param){
+    //     const user = await this.model.findOne(param)
+    //     return user
+    // }
 
-    async changePassword(email, password){
+    async changePassword(email, newPassword){
         try{
             return await this.model.findOneAndUpdate({email: email}, {password: newPassword} )
         } catch (error) {

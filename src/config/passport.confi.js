@@ -17,9 +17,9 @@ const initializaPassport = () => {
         usernameField: `email`, //para cambiar user.name por email
       },
       async (req, username, password, done) => {
-        const { first_name, last_name, age, email } = req.body;
+        const { first_name, last_name, age, email, role } = req.body;
         try {
-          const user = await userModel.findOne({ email: email });
+          const user = await userService.getUser({email: username});
           if (user) {
             console.log(`user ya existe`);
             return done(null, false);
@@ -32,7 +32,7 @@ const initializaPassport = () => {
             password: createHash(password),
             role,
           };
-          const result = await userModel.create(newUSer);
+          const result = await userService.createUser(newUSer);
           return done(null, result);
         } catch (error) {
           return done(`Error al obtener el usuario ${error}`);
@@ -45,7 +45,7 @@ const initializaPassport = () => {
         usernameField: `email`
          }, async(username, password, done) => {
             try{
-                const user = await userModel.findOne({email: username})
+                const user = await userService.getUser({email: username})
                 if(!user){
                     console.log(`Usuario no existe`)
                     return done(null, false)
@@ -83,7 +83,8 @@ passport.use(`github`, new GithubStrategy({
                 last_name: profile.username,
                 age: profile.username,
                 email: profile._json.email,
-                password: ``
+                password: ``,
+                role:``
             }
             let userReg = await userService.createUser(newUser)
             return done(null, userReg)

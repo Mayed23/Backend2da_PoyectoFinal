@@ -4,7 +4,7 @@ const { messageManagerMongo } = require(`../Dao/Mongo/messageManager.js`)
 const productManagerModel = require (`../Dao/Mongo/productsManager.js`)
 const cartsManagerMongo = require(`../Dao/Mongo/cartsManager.js`)
 const { userManagerMongo } = require(`../Dao/Mongo/userManager.js`)
-const { createHash } = require(`../utils/hash.js`)
+const { createHash, isValidPass } = require(`../utils/hash.js`)
 
 
 const viewsRouter = Router()
@@ -24,11 +24,13 @@ viewsRouter.get(`/login`, async (req, res) =>{
 })
 viewsRouter.post(`/login`, async (req, res)=>{
     const { email, password } = req.body
+    console.log(email, password)
     try{
-        const user = await userReg.getUser(email, password)
-            if (!user || user.password !== password)    {
-            return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
-        }
+        const user = await userReg.getUserByEmail(email)
+        console.log(user)
+            if (!user || !isValidPass(password, user)) return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
+            
+        
         const {first_name, last_name, age, email: emailUser} = user
             if (email === email.user || password === password.user){
             req.session.user={
@@ -64,9 +66,9 @@ viewsRouter.get(`/register`, async (req, res) =>{
 viewsRouter.post(`/register`, async (req, res) => {
     const {first_name, last_name, age, email, password, role} = req.body
     try{
-        const user = await userReg.getUsersByEmail(email)
+        const user = await userReg.getUser(email)
         if(user){
-            return res.render(`register`, {error: `el ${email} ya existe`})
+            return res.render(`register`, {error: `el usuario ya existe`})
         }
         if(!first_name || !last_name || !age || !email || !password || !role){
             return res.render(`register`, {error: `Ingrese todos los datos`})
@@ -111,20 +113,20 @@ viewsRouter.get(`/logout`, async (req, res) =>{
     
 })
 
-viewsRouter.get(`/resetpassword`, async (req, res) => {
+viewsRouter.get(`/ressetpassword`, async (req, res) => {
         try {
-            res.render(`resetPassword`);
+            res.render(`ressetPassword`);
             } catch (error) {
             console.log(error);
         }
 });
   
-viewsRouter.post(`/resetpassword`, async (req, res) => {
+viewsRouter.post(`/ressetpassword`, async (req, res) => {
         const { email, password } = req.body;
             try {
             
             const user = await userReg.getUserByEmail(email);
-            if (!user) return res.render(`resetPassword`, { error: `El usuario con el mail ${email} no existe` });
+            if (!user) return res.render(`ressetPassword`, { error: `El usuario con el mail ${email} no existe` });
                     
             await userReg.changePassword(email, createHash(password));
         

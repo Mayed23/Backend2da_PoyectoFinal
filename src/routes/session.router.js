@@ -1,25 +1,26 @@
 const { Router } = require(`express`)
-const { userManagerMongo } = require(`../Dao/Mongo/userManager.js`)
-const { create } = require(`connect-mongo`)
-const { createHash, isValidPass } = require(`../utils/hash.js`)
-const passport = require(`passport`)
+// const { userManagerMongo } = require(`../Dao/Mongo/userManager.js`)
+// const { create } = require(`connect-mongo`)
+const  passport  = require(`passport`)
 
 
 
 const sessionsRouter = Router()
-const userReg = new userManagerMongo()
+// const userReg = new userManagerMongo()
 
-sessionsRouter.post(`/login`, passport.authenticate(`login`, {failureRedirect: `faillogin`}), async (req, res)=>{
-    if(!req.user) return res.status(400).send({status: `error`, message: `Error, usurio incorrecto`})
-    const { firts_name, last_name, age, email } = req.user;
+sessionsRouter.post (`/login`, passport.authenticate(`login`, { failureRedirect: `faillogin`}), async (req, res)=> {
+    if(!req.user) return res.status(400).send({status:`error`, message: `Error usuario incorrecto`})
+
+    const { first_name, last_name, age, email, role } = req.user;
 
         req.session.user={
             first_name,
             last_name,
             age,
             email,
+            role
         }
-     res.send({ status:`success`, payload: req.user})   
+    res.send({ status:`success`, payload: req.user})   
 
 })  
 
@@ -32,12 +33,11 @@ sessionsRouter.get(`/faillogin`, (req, res) => {
 
 
 sessionsRouter.post(`/register`, passport.authenticate(`register`, {
-    failureRedirect:`/failregister`}), async (req, res)=>{
-        res.send({status: `success`, message: `El registro fue exitoso`})
+    failureRedirect:`failregister`}), async (req, res)=>{
+        res.send({status: `success`, message: `Usuario ya existe`})
       
 })
 sessionsRouter.get(`/fileregister`, async (req,res) => {
-    console.log(`Faile strategy`)
     res.status(401).send({ status: `error`, message: `Error!!, Ususario no registrado`})
 })
 

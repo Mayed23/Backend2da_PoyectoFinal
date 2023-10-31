@@ -24,10 +24,11 @@ viewsRouter.get(`/login`, async (req, res) =>{
 })
 viewsRouter.post(`/login`, async (req, res)=>{
     const { email, password } = req.body
-    console.log(email, password)
+    //console.log(email, password)
     try{
-        const user = await userReg.getUser(email)
+        const user = await userReg.getUserByEmail(email)
         console.log(user)
+
             if (!user || !isValidPass(password, user)) return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
             
         
@@ -66,7 +67,7 @@ viewsRouter.get(`/register`, async (req, res) =>{
 viewsRouter.post(`/register`, async (req, res) => {
     const {first_name, last_name, age, email, password, role} = req.body
     try{
-        const user = await userReg.getUser(email)
+        const user = await userReg.getUserByEmail(email)
         if(user){
             return res.render(`register`, {error: `el usuario ya existe`})
         }

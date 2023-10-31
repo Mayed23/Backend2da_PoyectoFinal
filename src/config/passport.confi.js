@@ -12,7 +12,7 @@ const initializePassport = () => {
   passport.use(
     `register`,
 
-    new localStrategy({ passReqToCallback: true, usernameField: "email" }, async (req, username, password, done) => {
+    new localStrategy({ passReqToCallback: true, usernameField: `email` }, async (req, username, password, done) => {
       const { first_name, last_name, age, email } = req.body;
 
       try {
@@ -38,17 +38,7 @@ const initializePassport = () => {
     })
   );
 
-  passport.serializeUser((user, done) => {
-    done(null, user._id);
-  });
-
-  passport.deserializeUser(async (id, done) => {
-    let user = await userService.getUserById({_id: id});
-    done(null, user);
-  });
-
-
-  passport.use("login", new localStrategy({ usernameField: "email" }, async (username, password, done) => {
+   passport.use(`login`, new localStrategy({ usernameField:`email` }, async (username, password, done) => {
     try {
       const user = await userService.getUserByEmail(username);
       if (!user) {
@@ -66,7 +56,7 @@ const initializePassport = () => {
     }
   }));
 
-  passport.use("github", new GithubStrategy({
+passport.use("github", new GithubStrategy({
     clientID: `Iv1.62904e5ec63cead5`,
     clientSecret: `bca181fea899b7e5f55acea61d71d41a27896e5e`,
     callbackURL: `http://localhost:8080/api/sessions/githubcallback`
@@ -95,6 +85,15 @@ const initializePassport = () => {
       return done("Error al obtener el usuario" + error);
     }
   }));
+
+  passport.serializeUser((user, done) => {
+    done(null, user._id);
+  });
+
+  passport.deserializeUser(async (id, done) => {
+    let user = await userService.getUserById({_id: id});
+    done(null, user);
+  });
 
 };
 

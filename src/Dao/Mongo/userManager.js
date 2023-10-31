@@ -13,30 +13,25 @@ class userManagerMongo {
         }
     }
 
-    async getUser(filter){
-        try{
-            return await this.model.findOne({email: filter})
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // async getUser(){
+    //     try{
+    //         return await this.model.find()
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     async getUserById(uid){
-        try{
+        
             return await this.model.findById({_id: uid})
-        } catch (error) {
-            console.log(error)
-        }
+       
     }
 
     async getUserByEmail(email){
-        try{
-            return await this.model.findOne({email: email}).lean()
-        }catch(error){
-            console.log(error)
-        }
-
+        
+        return await this.model.findOne({email: email})
     }
+
     async createUser(newUser)
     {
            try 

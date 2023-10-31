@@ -18,7 +18,7 @@ sessionsRouter.post(
   );
   
 sessionsRouter.get(`/failregister`, (req, res) => {
-    res.status(401).send({ status: `error`, message: `Error al registrar el usuario` });
+    res.status(401).send({ status: `error`, message: `Error Usuario no registrado` });
 });
 
 sessionsRouter.post("/login", passport.authenticate("login", { failureRedirect: "faillogin" }), async (req, res) => {

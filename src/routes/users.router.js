@@ -28,10 +28,10 @@ router.get(`/:id`, async (req, res) => {
     }
 })
 
-router.get(`/:email`, async (req, res) => {
+router.get(`/email/:email`, async (req, res) => {
     try { 
         let email = req.params
-        let user = await userService.getUserByEmail({email: email})
+        let user = await userService.getUserByEmail(email)
         console.log(user)
         res.send({
             status: `success`,

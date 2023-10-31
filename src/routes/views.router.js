@@ -26,7 +26,7 @@ viewsRouter.post(`/login`, async (req, res)=>{
     const { email, password } = req.body
     console.log(email, password)
     try{
-        const user = await userReg.getUserByEmail(email)
+        const user = await userReg.getUser(email)
         console.log(user)
             if (!user || !isValidPass(password, user)) return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
             

@@ -1,5 +1,5 @@
 const { Router } = require(`express`)
-const { userManagerMongo } = require(`../Dao/Mongo/userManager`)
+const { userManagerMongo } = require(`../Dao/Mongo/userManager.js`)
 
 const router = Router()
 let userService = new userManagerMongo()
@@ -30,7 +30,7 @@ router.get(`/:id`, async (req, res) => {
 
 router.get(`/:email`, async (req, res) => {
     try { 
-        let email = req.params.email
+        let email = req.params
         let user = await userService.getUserByEmail({email: email})
         console.log(user)
         res.send({

@@ -15,7 +15,7 @@ class userManagerMongo {
 
     async getUser(filter){
         try{
-            return await this.model.findOne(filter)
+            return await this.model.findOne({email: filter})
         } catch (error) {
             console.log(error)
         }
@@ -31,7 +31,7 @@ class userManagerMongo {
 
     async getUserByEmail(email){
         try{
-            return await this.model.findOne({email: email})
+            return await this.model.findOne({email: email}).lean()
         }catch(error){
             console.log(error)
         }

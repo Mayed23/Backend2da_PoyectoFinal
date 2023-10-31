@@ -1,10 +1,10 @@
 const { Router } = require(`express`)
-const usersRouter = require(`./users.router.js`)
-const productsRouter = require (`./products.route.js`)
-const cartsRouter = require (`./carts.router.js`)
+const usersRouter = require(`./api/users.router.js`)
+const productsRouter = require (`./api/products.route.js`)
+const cartsRouter = require (`./api/carts.router.js`)
 const viewsRouter = require(`./views.router.js`)
-const cookiesRouter = require (`./cookie.router.js`)  
-const sessionsRouter = require("./session.router.js")
+const cookiesRouter = require (`./api/cookie.router.js`)  
+const sessionsRouter = require("./api/session.router.js")
 
 
 const router = Router()

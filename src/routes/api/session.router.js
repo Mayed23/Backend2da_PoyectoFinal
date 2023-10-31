@@ -1,8 +1,8 @@
 const { Router } = require(`express`)
-const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
+const { userManagerMongo } = require("../../Dao/Mongo/userManager.js")
 const { authenticate, Passport } = require("passport")
 const passport = require("passport")
-const { userModel } = require("../Dao/Mongo/models/user.model.js")
+const { userModel } = require("../../Dao/Mongo/models/user.model.js")
 
 
 
@@ -35,8 +35,8 @@ sessionsRouter.post(`/login`, async (req, res)=>{
     const { email, password } = req.body
    
     try{
-        const confirUser = await userReg.getUsersByEmail(email)
-        if(confir.password === req.body.password){
+        const confirUser = await userReg.getUsersByEmail({email})
+        if(confirUser.password === req.body.password){
             if(confir.role === `admin`){
                 req.session.emailUser = email
                 req.session.nameUser = confir.first_name

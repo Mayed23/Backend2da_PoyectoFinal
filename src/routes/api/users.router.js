@@ -1,5 +1,5 @@
 const { Router } = require(`express`)
-const { userManagerMongo } = require(`../Dao/Mongo/userManager`)
+const { userManagerMongo } = require(`../../Dao/Mongo/userManager`)
 
 const router = Router()
 let userService = new userManagerMongo()

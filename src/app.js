@@ -12,7 +12,7 @@ const { connectDb } = require(`./config/confi.js`)
 const routerApp = require (`../src/routes`)
 const { Socket } = require(`dgram`)
 const passport = require (`passport`)
-const  { initializaPassport }  = require (`./config/passport.confi.js`)
+const  { initializePassport }  = require (`./config/passport.confi.js`)
 
 
 const app = express()
@@ -38,7 +38,7 @@ app.use(session({
 
 //******MIDDLEWARES PASSPORT **********/
 
-initializaPassport()
+initializePassport()
 app.use(passport.initialize())
 //app.use(passport.session)
 

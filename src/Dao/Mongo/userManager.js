@@ -4,21 +4,17 @@ class userManagerMongo {
     constructor(){
         this.model= userModel
     }
-
-    async getUsers(){
-        try{
-            return await this.model.find({})
-        } catch (error) {
-            console.log(error)
-        }
+async getUsers(){
+        
+        const users = await this.model.find({})
+        return users
+       
     }
+    
 
-    async getUser(uid){
-        try{
-            return await this.model.findOne({_id: uid})
-        } catch (error) {
-            console.log(error)
-        }
+    async getUserById(uid){
+        
+        return await this.model.findById({_id: uid})
     }
 
 
@@ -41,11 +37,11 @@ class userManagerMongo {
     }
 
     async getUsersByEmail(email){
-       const user = await this.model.findOne({email: email})
-       return user
+       
+        return await this.model.findOne({email: email})
     }
         
-    async changePassword(email, password){
+    async changePassword(email, newPassword){
         try{
             return await this.model.findOneAndUpdate({email: email}, {password: newPassword} )
         } catch (error) {

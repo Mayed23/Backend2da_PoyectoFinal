@@ -1,10 +1,14 @@
 const { Router } = require(`express`)
 const { uploader } = require(`../utils/multer.js`)
 const { messageManagerMongo } = require(`../Dao/Mongo/messageManager.js`)
-const product = require(`../Dao/Mongo/models/products.model.js`)
 const productManagerModel = require (`../Dao/Mongo/productsManager.js`)
 const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
 const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
+const { userModel } = require("../Dao/Mongo/models/user.model.js")
+const passport = require("passport")
+const { passportCall } = require("../middleware/passportCall.meddlewars.js")
+const { authorization } = require("../middleware/authorization.js")
+
 
 
 
@@ -25,30 +29,38 @@ viewsRouter.get(`/login`, async (req, res) =>{
         console.log(error)
     }
 })
-viewsRouter.post(`/login`, async (req, res) =>{
-    const { email, password } = req.body
-      try{
-        const confirUser = await userReg.getUsersByEmail(email)
-        if(confirUser.password === password){
-            if(confirUser.role === `admin`){
-                req.session.emailUser = email
-                req.session.nameUser = confirUser.first_name
-                req.session.lastNaUser =  confirUser.last_name
-                req.session.roleUser = confirUser.role
-                res.redirect(`/profile`)
-            }else{
-                req.session.emailUser = email
-                req.session.roleUser = confirUser.role
-                res.redirect(`/users`)
 
-            }
-        }else{
-            res.redirect(`/profile`)
+viewsRouter.post(`/login`, async (req, res)=>{
+    const { email, password } = req.body
+    try{
+        const user = await userReg.getUsersByEmail(email)
+        console.log(user)
+            if (!user || user.password !== password)    {
+            return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
         }
+        const {first_name, last_name, age, email: emailUser} = user
+            if (email === email.user || password === password.user){
+            req.session.user={
+                first_name,
+                last_name,
+                age,
+                email: emailUser,
+                role: `admin`
+            }
+        } else{
+            req.session.user={
+                first_name,
+                last_name,
+                age,
+                email: emailUser,
+                role: `user`
+            }
+        }
+        return res.send({user: req.session.user})
     }catch(error){
         console.log(error)
-    }
-})
+    }    
+})       
 
 
 
@@ -61,18 +73,27 @@ viewsRouter.get(`/register`, async (req, res) =>{
 });
 
 viewsRouter.post(`/register`, async (req, res) => {
-    const {first_name, last_name, age, email, password} = req.body
+    const {first_name, last_name, age, email, password, role} = req.body
     try{
         const user = await userReg.getUsersByEmail(email)
+        console.log(user)
         if(user){
             return res.render(`register`, {error: `el ${email} ya existe`})
         }
-        if(!first_name || !last_name || !age || !email || !password){
+        if(!first_name || !last_name || !age || !email || !password || !role){
             return res.render(`register`, {error: `Ingrese todos los datos`})
         }
-        const newUser = await userReg.createUser(newUser)
-        console.log(newUser)
-        res.redirect(`/login`)
+        const newUser = await userReg.createUser({
+           
+                first_name,
+                last_name,
+                age,
+                email,
+                password: createHash(password),
+                role
+        })
+            console.log(newUser)
+            res.redirect(`/login`)
     
         }catch(error) {
         console.log(error)
@@ -129,6 +150,35 @@ viewsRouter.post(`/messages`, async (req, res)=>{
 
 
 // })
+viewsRouter.get(`/users`, [
+        passportCall(`jwt`),
+        authorization([`USER`,`ADMIN`])
+    ], async (req, res) => {
+        const {limit, page, query } = req.query
+        try{
+            const options = { 
+                limit: limit || 5, 
+                page: page || 1, 
+                lean: true
+            }
+            const users = await userModel.paginate({}, options)
+            //console.log(users)
+            const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = users
+            res.status(200).render("users",{
+                showNav: true, 
+                users: docs,
+                totalPages,
+                prevPage,
+                nextPage,
+                page: users.page,
+                hasPrevPage,
+                hasNextPage
+            
+        })
+        }catch (error) {
+            console.log(error)
+        }
+})    
 
 viewsRouter.get(`/products`, async (req, res) => {
     const {limit, page, sort, category, status} = req.query

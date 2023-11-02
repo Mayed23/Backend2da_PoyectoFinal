@@ -1,10 +1,23 @@
 <div>
     <h1>Login</h1>
-    <form action="/login" method="POST">
+    <form action="/login" method="POST">    
         <label for="email">E-mail:</label>
-        <input type="text" name=" email" placeholder="Ingrese el E-mail">
+        <input type="text" name="email" placeholder="Ingrese el E-mail">
         <label for="password">Clave:</label>
         <input type="text" name="password" placeholder="Ingrese el Pasword">
+        <button type="submit">Ingresar</button>
     </form>
-        <button>Ingresar</button>
+        <a href="/api/sessions/github">
+            <button class="btn btn-dark">GitHup</button>
+        </a>
+        
+        {{#if error}}
+         <p>{{error}}</p>
+        {{/if}}
+
+  <p>Restaurar contraseña <span><a href="/ressetPassword">aquí</a></span></p>
+  
+
+  <p>¿No tienes cuenta?</p>
+  <a href="/register">Regístrate</a>
 </div>

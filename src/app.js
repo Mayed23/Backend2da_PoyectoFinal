@@ -11,6 +11,9 @@ const  MongoStore  = require (`connect-mongo`)
 const { connectDb } = require(`./config/confi.js`)
 const routerApp = require (`../src/routes`)
 const { Socket } = require("dgram")
+const passport = require("passport")
+const { initializePassport } = require("./config/passportJwt.js")
+
 
 
 const app = express()
@@ -33,6 +36,12 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+
+//******MIDDLEWARES PASSPORT **********/
+
+initializePassport()
+app.use(passport.initialize())
+//app.use(passport.session)
 
 
 app.use(express.json())

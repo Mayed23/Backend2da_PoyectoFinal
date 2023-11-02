@@ -22,6 +22,14 @@
                     <input type="text" name="rol" placeholder="Ingrese el rol">
                     <button class="btn" type="submit">Guardar</button>
                 </form>
+
+            {{#if error}}
+             <p>{{error}}</p>
+            {{/if}}
+
+            <p>¿Ya tienes cuenta?</p>
+            <a href="/login">Login</a>
+
         </div>
     </section>
 </body>

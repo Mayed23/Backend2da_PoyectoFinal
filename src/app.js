@@ -25,7 +25,7 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: `mongodb+srv://AdminMaite:maite1503@cluster0.twm9xie.mongodb.net/ecommerce?retryWrites=true&w=majority`,
         mongoOptions: {
-            // useNewUrlParse: true,
+             //useNewUrlParse: true,
             useUnifiedTopology: true
             
         },        
@@ -40,7 +40,7 @@ app.use(session({
 
 initializePassport()
 app.use(passport.initialize())
-//app.use(passport.session)
+app.use(passport.session())
 
 
 app.use(express.json())

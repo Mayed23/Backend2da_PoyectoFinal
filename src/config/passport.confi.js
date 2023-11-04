@@ -66,14 +66,17 @@ const initializePassport = () => {
     console.log(`profile:`, profile)
     try{
       const user = await userService. getUserByEmail(profile._json.email)
+      //console.log(user)
       if(!user){
+        const email = profile._json.email || profile._json.id
+        
         const newUser = {
           first_name: profile._json.name,
           last_name: ``,
           age: 18,
           email,
           password: ``,
-          role
+          role: ``,
         }
         const result = await userService.createUser(newUser)
         return done(null, result)

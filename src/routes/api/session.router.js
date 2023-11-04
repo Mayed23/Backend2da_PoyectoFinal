@@ -1,70 +1,40 @@
-const { Router } = require("express")
-const { userManagerMongo } = require("../../Dao/Mongo/userManager.js")
-const { authenticate, Passport } = require("passport")
-const passport = require("passport")
-const { isValidPass, createHash } = require("../../utils/hash.js")
-const generateToken = require ("../../utils/jsonwebtoken.js")
+const { Router } = require(`express`)
+const  passport  = require(`passport`)
+
 
 
 const sessionsRouter = Router()
-const userReg = new userManagerMongo()
 
 
-sessionsRouter.post(`/register`, passport.authenticate(`register`), async (req, res)=>{
+sessionsRouter.post(`/login`, passport.authenticate(`login`, {
+  failureFlash: `faillogin`}), async (req, res) => {
+    if(!req.user) return res.status(400).send({ status: `error`, message: `Datos inválidos`})
+    const { first_name, last_name, age, email} = req.user
+    req.session.user = {
+      first_name,
+      last_name,
+      age,
+      email
+    }
+    res.send({ status: `success`, payload: req. user })
+  })
+sessionsRouter.get(`/faillogin`, (req, res) => {
+  res.send({ error: "Error datos inválidos" })
+})  
+
+sessionsRouter.post(
+    `/register`,
+    passport.authenticate(`register`, { failureRedirect: `failregister` }),
+    async (req, res) => {
+      res.send({ status: `success`, message: `Usuario existe` });
+    }
+  );
   
-    const {first_name, last_name, age, email, password, role} = req.body
-    try{
-        const user = await userReg.getUsersByEmail(email)
-        if(user){
-            return res.status(404).json({error: `el ${email} ya existe`})
-        }
-        if(!first_name || !last_name || !age || !email || !password || !role){
-            return res.status(404).json({error: `Ingrese todos los datos`})
-        }
-        const newUser = await userReg.createUser({
-            first_name,
-            last_name,
-            age,
-            email,
-            password: createHash(password),
-            role
-        })
-        console.log(newUser)
-        res.redirect(`/login`)
-    
-        }catch(error) {
-        res.status(500).send(`Error en el registrio:` + error.message) 
-    }
-    
-})
+sessionsRouter.get(`/failregister`, (req, res) => {
+    res.status(401).send({ status: `error`, message: `Error Usuario no registrado` });
+});
 
-sessionsRouter.post(`/login`, async (req, res)=>{
-    const { email, password } = req.body
-    console.log(req.body)
-    const user = await userReg.getUsersByEmail(email)
-    console.log(user)
-    if(!user) return res.status(401).send({status: `error`, error: `El Usuario no existe`})
-    
-    if(!isValidPass(password, user)){
-        return res.status(401).send({status: `error`, error: `Datos incorrectos`})
-    }
-    const token = generateToken({
-        first_name: user.first_name,
-        last_name: user.last_name,
-        email: user.email,
-        role: user.role
-    })
 
-    res.cookie(`cookieToken`, token, {
-        maxAge: 60*60*10000,
-        httpOnly: true
-    }).status(200).send({
-        status: `success`,
-        token: token,
-        message: `loggen successfully`
-    })
-    
-})
 sessionsRouter.get(`/logout`, async (req, res) =>{
     try{
         req.session.destroy((error) => {
@@ -79,12 +49,11 @@ sessionsRouter.get(`/logout`, async (req, res) =>{
         
 })
 
+sessionsRouter.get(`/github`, passport.authenticate(`github`, { scope: [`user:email`]}), async (req, res) => { });
 
-
-
-
-
-
-
+sessionsRouter.get(`/githubcallback`, passport.authenticate(`github`, { failureRedirect: `/login` }), async (req, res) => {
+  req.session.user = req.user;
+  res.redirect(`/profile`);
+});
 
 module.exports = sessionsRouter

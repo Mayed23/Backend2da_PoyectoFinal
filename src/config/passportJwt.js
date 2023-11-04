@@ -9,8 +9,10 @@ const initializePassport = () => {
     //Extraer el token de  la cookie
     const cookieExtrator = req => {
         let token = null 
+            console.log(`cookie extractor:`. req.cookie)
         if (req && req.cookies) {
             token = req.cookies[`cookieToken`]
+                console.log(`token extraxtros:`, token)
         }
         return token
     }

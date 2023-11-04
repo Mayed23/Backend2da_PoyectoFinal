@@ -5,9 +5,10 @@ const productManagerModel = require (`../Dao/Mongo/productsManager.js`)
 const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
 const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
 const { userModel } = require("../Dao/Mongo/models/user.model.js")
-const passport = require("passport")
 const { passportCall } = require("../middleware/passportCall.meddlewars.js")
 const { authorization } = require("../middleware/authorization.js")
+const { createHash, isValidPass } = require("../utils/hash.js")
+const { generateToken } = require("../utils/jsonwebtoken.js")
 
 
 
@@ -23,44 +24,44 @@ const userReg = new userManagerMongo()
 
 
 viewsRouter.get(`/login`, async (req, res) =>{
-    try{
-        res.render(`login`)
-    }catch(error){
-        console.log(error)
-    }
+    res.render(`login`, {
+        showNav: true
+    })
 })
 
+
+viewsRouter.get(`/register`, async (req, res) =>{
+    res.render(`register`, {
+        showNav: true
+    })
+})
 viewsRouter.post(`/login`, async (req, res)=>{
     const { email, password } = req.body
-    try{
-        const user = await userReg.getUsersByEmail(email)
-        console.log(user)
-            if (!user || user.password !== password)    {
-            return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
-        }
-        const {first_name, last_name, age, email: emailUser} = user
-            if (email === email.user || password === password.user){
-            req.session.user={
-                first_name,
-                last_name,
-                age,
-                email: emailUser,
-                role: `admin`
-            }
-        } else{
-            req.session.user={
-                first_name,
-                last_name,
-                age,
-                email: emailUser,
-                role: `user`
-            }
-        }
-        return res.send({user: req.session.user})
-    }catch(error){
-        console.log(error)
-    }    
-})       
+    //console.log(req.body)
+    const user = await userReg.getUsersByEmail(email)
+    //console.log(user)
+    if(!user) return res.status(401).send({status: `error`, error: `El Usuario no existe`})
+    
+    if(!isValidPass(password, user)){
+        return res.status(401).send({status: `error`, error: `Datos incorrectos`})
+    }
+    const token = generateToken({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        role: user.role
+    })
+
+    res.cookie(`cookieToken`, token, {
+        maxAge: 60*60*10000,
+        httpOnly: true
+    }).status(200).send({
+        status: `success`,
+        token: token,
+        message: `loggen successfully`
+    })
+    
+})
 
 
 
@@ -144,12 +145,12 @@ viewsRouter.post(`/messages`, async (req, res)=>{
     await msg.createMessage(newMessage)
     console.log (message)
 })
-// viewsRouter.post(`/messages`, uploader.single(`file`), (req, res) =>{
-//     if(!req.file) return res.status(400).send({status: `error`, error: `No se pudo enviar el mensaje`})
-//     res.send({status: `success`, payload: `mensaje enviado`})
+viewsRouter.post(`/messages`, uploader.single(`file`), (req, res) =>{
+    if(!req.file) return res.status(400).send({status: `error`, error: `No se pudo enviar el mensaje`})
+    res.send({status: `success`, payload: `mensaje enviado`})
 
 
-// })
+})
 viewsRouter.get(`/users`, [
         passportCall(`jwt`),
         authorization([`USER`,`ADMIN`])

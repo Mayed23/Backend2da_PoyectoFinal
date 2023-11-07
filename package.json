@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "comander": "^0.0.1-security",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "express": "^4.18.2",

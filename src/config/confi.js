@@ -1,10 +1,27 @@
 const { connect } = require (`mongoose`)
+const dotenv = require (`dotenv`)
+const { program } = require("../utils/commander")
+
+const { mode } = program.opts()
+
+console.log(mode)
+
+dotenv.config({
+    path: mode === `development` ? `./.env.development` : `./.env.production`
+})
+
+
+const configObject = {
+    port: process.env.PORT,
+    mongo_url: process.env.MONGO_URL
+    
+}
 
 
 const connectDb = async () => {
     try {
         console.log(`Base de Datos conectada`)
-        return await connect("mongodb+srv://AdminMaite:maite1503@cluster0.twm9xie.mongodb.net/ecommerce?retryWrites=true&w=majority")
+        return await connect(process.env.MONGO_URL)
 
     } catch (error) {
         console.log(error)
@@ -17,4 +34,4 @@ const connectDb = async () => {
 
 
 
-module.exports = { connectDb }
+module.exports = { connectDb, configObject }

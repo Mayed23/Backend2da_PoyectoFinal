@@ -26,7 +26,8 @@ const userSchema =  new Schema({
         type: String
     },
     role: {
-        type: String
+        type: String,
+        default: `user`
     }
  
     // gender: String

@@ -8,7 +8,7 @@ const { userModel } = require("../Dao/Mongo/models/user.model.js")
 const { passportCall } = require("../middleware/passportCall.meddlewars.js")
 const { authorization } = require("../middleware/authorization.js")
 const { createHash, isValidPass } = require("../utils/hash.js")
-const { generateToken } = require("../utils/jsonwebtoken.js")
+const { generateToken, verifyToken } = require("../utils/jsonwebtoken.js")
 
 
 
@@ -105,13 +105,14 @@ viewsRouter.post(`/register`, async (req, res) => {
 
 viewsRouter.get(`/profile`, async (req, res) =>{
 
-    res.render(`profile`, {
-        first_name: req.session.nameUser,
-        last_name: req.session.lastNaUser,
-        email: req.session.emailUser,
-        role: req.session.roleUsers
-    })
-
+    try{
+        const user  = verifyToken(req.cookies)
+           
+        if(!user) return res.redirect(`/login`)
+        res.render(`profile`,  user )
+    }catch(error){
+        console.log(error)
+    }
 })
 
 viewsRouter.get(`/logout`, async (req, res) =>{

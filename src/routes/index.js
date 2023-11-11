@@ -5,6 +5,7 @@ const cartsRouter = require (`./api/carts.router.js`)
 const viewsRouter = require(`./views.router.js`)
 const cookiesRouter = require (`./api/cookie.router.js`)  
 const sessionsRouter = require("./api/session.router.js")
+const routerprueba = require("./api/pruebas.router.js")
 
 
 const router = Router()
@@ -17,6 +18,7 @@ router.use(`/api/users`, usersRouter)
 router.use(`/api/products`, productsRouter)
 router.use(`/api/carts`, cartsRouter)
 router.use(`/cookies`, cookiesRouter)
+router.use(`/pruebas`, routerprueba )
 
 
 

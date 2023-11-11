@@ -8,23 +8,32 @@ const session = require (`express-session`)
 const FileStore = require (`session-file-store`)
 const  MongoStore  = require (`connect-mongo`)
 
-const { connectDb } = require(`./config/confi.js`)
+const { connectDb, configObject } = require(`./config/confi.js`)
 const routerApp = require (`../src/routes`)
 const { Socket } = require("dgram")
-const passport = require("passport")
-const { initializePassport } = require("./config/passportJwt.js")
+const passport = require(`passport`)
+const { initializePassport } = require (`../src/config/passportJwt.js`)
 
 
 
 const app = express()
-const PORT = 8080
+const PORT = configObject.port
+
+console.log(`configObject`, configObject)
+
+// console.log(process.cwd())
+// console.log (process.pid)
+// console.log (process.memoryUsage())
+// console.log (process.argv)
+// console.log (process.version)
+
 
 connectDb()
 
 //Session con almacenamiento en Mongo
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: `mongodb+srv://AdminMaite:maite1503@cluster0.twm9xie.mongodb.net/ecommerce?retryWrites=true&w=majority`,
+        mongoUrl: process.env.MONGO_URL,
         mongoOptions: {
             // useNewUrlParse: true,
             useUnifiedTopology: true
@@ -32,7 +41,7 @@ app.use(session({
         },        
         ttl: 15
     }),
-    secret: `f1rm@un1k@`,
+    secret: process.env.SECRET_SESSIONS,
     resave: true,
     saveUninitialized: true
 }))

@@ -27,7 +27,7 @@ viewsRouter.post(`/login`, async (req, res)=>{
     //console.log(email, password)
     try{
         const user = await userReg.getUserByEmail(email)
-        console.log(user)
+        //console.log(user)
 
             if (!user || !isValidPass(password, user)) return res.render(`login`,{ error: `Usuario o constraseña icnorrecto`})
             
@@ -92,16 +92,15 @@ viewsRouter.post(`/register`, async (req, res) => {
 })
     
 viewsRouter.get(`/profile`, async (req, res) =>{
-    if(!req.session.emailUser){
-        return res.redirect(`login`)
+    try{
+        const user = req.session
+        
+        if(!user) return res.redirect(`/login`)
+        res.render (`profile`, user)
+    }catch(error){
+        console.log(error)
     }
-    res.render(`profile`, {
-        first_name: req.session.nameUser,
-        last_name: req.session.lastNaUser,
-        email: req.session.emailUser,
-        role: req.session.roleUsers
-    })
-
+  
 })
 
 viewsRouter.get(`/logout`, async (req, res) =>{

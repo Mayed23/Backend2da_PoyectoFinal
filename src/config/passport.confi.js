@@ -35,7 +35,7 @@ const initializePassport = () => {
     })
   )
   passport.serializeUser((user, done) => {
-    done(null, user._id) // null: indica que no hay error, _id: id del usuario
+    done(null, user) // null: indica que no hay error, _id: id del usuario
   })
   
   passport.deserializeUser(async(id, done) => {

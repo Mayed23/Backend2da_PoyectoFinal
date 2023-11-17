@@ -1,16 +1,17 @@
 const passport = require (`passport`)
 const pjwt = require (`passport-jwt`)
 const GitHubStrategy = require (`passport-github2`)
-const { userManagerMongo } = require (`../Dao/Mongo/userManager.js`)
 const local = require(`passport-local`)
 const { createHash, isValidPass } = require(`../utils/hash.js`)
+const UserDaoMongo = require("../Dao/Mongo/userDaosMongo.js")
+const { userService } = require("../routes/service/service.js")
 
 
 
 const JWTStrategy = pjwt.Strategy
 const ExtractJWT = pjwt.ExtractJwt
 const localStrategy = local.Strategy
-const userService = new userManagerMongo()
+
 
 
 
@@ -18,7 +19,7 @@ const initializePassport = () => {
     //Extraer el token de  la cookie
     const cookieExtrator = req => {
         let token = null 
-            console.log(`cookie extractor:`. req.cookie)
+            //console.log(`cookie extractor:`. req.cookie)
         if (req && req.cookies) {
             token = req.cookies[`cookieToken`]
                 console.log(`token extraxtros:`, token)
@@ -30,7 +31,7 @@ const initializePassport = () => {
     //middleware de passport
     passport.use(`jwt`, new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtrator]),
-        secretOrKey: `SecretKeyFuncionaParaFirmarToken`
+        secretOrKey: process.env.PRIVATE_KEY
     }, async (jwt_payload, done) => {
         try{
             return done(null, jwt_payload)
@@ -66,7 +67,7 @@ const initializePassport = () => {
 
     passport.use(`login`, new localStrategy({usernameField: `email`}, async (username, password, done) =>{
         try{
-          const user = await userService. getUserByEmail(username)
+          const user = await userService.getUserByEmail(username)
           if (!user){
             console.log(`EL usuario no Existe`)
             return( null, false)
@@ -81,13 +82,13 @@ const initializePassport = () => {
     
 
     passport.use(`github`, new GitHubStrategy({
-        clientID: `Iv1.62904e5ec63cead5`,
-        clientSecret: `bca181fea899b7e5f55acea61d71d41a27896e5e`,
-        callbackURL: `http://localhost:8080/api/sessions/githubcallback` 
+        clientID: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        callbackURL: process.env.CALLBACK_URL 
     }, async (accessToken, refreshToken, profile, done) => {
         //console.log(`profile:`, profile)
         try{
-        const user = await userService.getUsersByEmail(profile._json.email)
+        const user = await userService.getUserByEmail(profile._json.email)
         console.log(user)
         if(!user){
             const email = profile._json.email || profile._json.id
@@ -100,7 +101,7 @@ const initializePassport = () => {
             password: ``,
             role: ``,
             }
-            const result = await userService.createUser(newUser)
+            const result = await userService.addUser(newUser)
             return done(null, result)
         }
         return done(null, user)

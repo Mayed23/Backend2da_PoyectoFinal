@@ -7,7 +7,7 @@ const collection = `users`
 const userSchema =  new Schema({
     first_name: {
         type: String,
-        required: true,
+        Required: true,
         index: true
     },
     last_name: {
@@ -18,7 +18,7 @@ const userSchema =  new Schema({
 
     email: {
         type: String,
-        required: true,
+        Required: true,
         unique: true
     },  
     
@@ -27,7 +27,7 @@ const userSchema =  new Schema({
     },
     role: {
         type: String,
-        default: `user`
+        Default: `user`
     }
  
     // gender: String

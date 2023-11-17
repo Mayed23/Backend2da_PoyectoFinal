@@ -13,7 +13,12 @@ dotenv.config({
 
 const configObject = {
     port: process.env.PORT,
-    mongo_url: process.env.MONGO_URL
+    mongo_url: process.env.MONGO_URL,
+    privateKey: process.env.PRIVATE_KEY,
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    callbackURL: process.env.CALLBACK_URL
+
     
 }
 

@@ -1,29 +1,33 @@
 ###
 POST  http://localhost:8080/api/products
 Content-Type: application/json
-           
+
+    {
+        
+        "title": "prueba4",
+        "price": 20,
+        "description": "prueba4",
+        "thumbnail": "imagenPrueba4",
+        "status":"true",
+        "stock":"15",
+        "code": "9998",
+        "category": "1"            
+            
+    }      
        
-   {
-            "name":"Filtro de Gasolina",
-            "model":"Lu-D-Mqx",
-            "price":15,
-            "img":"img11",
-            "code":"1240",
-            "category":"2",
-            "stock":"15"
-    }
+
       
 
 ###
-GET   http://localhost:8080/api/products/_652e8dbb036de73c72e0be29
+GET   http://localhost:8080/api/products/652e8dbb036de73c72e0be29
 
 
 ###
-GET   http://localhost:8080/api/products/_652e90552274c45611fa49c3
+GET   http://localhost:8080/api/products/652e90552274c45611fa49c3
  
 
 ###
-GET  http://localhost:8080/api/carts
+GET http://localhost:8080/api/carts/652b298fd1854792b6595cbf
 
 
 ###
@@ -31,7 +35,7 @@ POST http://localhost:8080/api/carts
 Content-Type: application/json
 
 {
-    "products": [], 
+    "products": "6554e7486b8dd050038ee84f", 
     "quantity": 5,
     "total": 44
 
@@ -40,8 +44,123 @@ Content-Type: application/json
 
 
 ###
+GET http://localhost:8080/api/carts/652b091e08c04721038bafab
+
+
+###
+POST   http://localhost:8080/api/carts/652b091e08c04721038bafab/product/652e90552274c45611fa49c3
+
+{
+    "product": "652e90552274c45611fa49c3",
+    "quantity": 2
+}
+
+
+###
+
+GET  http://localhost:8080/api/users
+
+
+###
+GET  http://localhost:8080/api/users/6551190cb8a912e07a9c3894
+
+
+
+
+###
 GET  http://localhost:8080/api/carts/652e83679d8b1134b6186020
 
 ###
 POST http://localhost:8080/api/carts/652b091e08c04721038bafab/product/652e8e50036de73c72e0be2b
+
+###
+GET http://localhost:8080/api/messages
+
+###
+POST  http://localhost:8080/api/messages
+
+###
+PUT  http://localhost:8080/api/messages/321
+
+###
+DELETE  http://localhost:8080/api/messages/321
+
+###
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+    "first_name": "prueba812",
+    "last_name": "prueba812",
+    "age": 18,
+    "email": "pp8812@gmail.com",
+    "pasword": "123456",
+    "role": "user"
+   
+}
+
+###
+GET  http://localhost:8080/api/users/email/pp88@gmail.com
+
+
+###
+GET  http://localhost:8080/api/users
+
+###
+DELETE    http://localhost:8080/api/users/6553dd5b64f9eb192ac20b2b
+Content-Type: application/json
+
+{
+    "first_name": "prueba5",
+    "last_name": "prueba5",
+    "age": 30,
+    "email": "pp55@gmail.com",
+    "pasword": "123456",
+    "role": "user"
+   
+}
+
+###
+GET   http://localhost:8080/api/products/6552cb96abfe8d85ccba9281
+Content-Type: application/json
+
+    {
+        
+        "title": "prueba4",
+        "price": 20,
+        "description": "prueba4",
+        "thumbnail": "imagenPrueba4",
+        "status":"true",
+        "stock":"35",
+        "code": "9998",
+        "category": "1"            
+            
+    }      
+       
+###
+DELETE   http://localhost:8080/api/products/6552cb96abfe8d85ccba9281
+Content-Type: application/json
+
+    {
+        
+        "title": "prueba4",
+        "price": 20,
+        "description": "prueba4",
+        "thumbnail": "imagenPrueba4",
+        "status":"true",
+        "stock":"35",
+        "code": "9998",
+        "category": "1"            
+            
+    }      
+       
+      
+
+
+###
+GET   http://localhost:8080/api/products
+
+ 
+
+
 

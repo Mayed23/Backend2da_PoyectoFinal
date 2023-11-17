@@ -1,17 +1,18 @@
 const express = require (`express`)
+const { Server } = require (`socket.io`)
 const handlebars = require (`express-handlebars`)
-const path = require (`path`)
-const { server, Server } = require (`socket.io`)
-
 const cookieParser = require (`cookie-parser`)
+const path = require (`path`)
 const session = require (`express-session`)
+const passport = require(`passport`)
+
+const { Socket } = require("dgram")
 const FileStore = require (`session-file-store`)
 const  MongoStore  = require (`connect-mongo`)
 
+
 const { connectDb, configObject } = require(`./config/confi.js`)
 const routerApp = require (`../src/routes`)
-const { Socket } = require("dgram")
-const passport = require(`passport`)
 const { initializePassport } = require (`../src/config/passportJwt.js`)
 
 
@@ -19,14 +20,7 @@ const { initializePassport } = require (`../src/config/passportJwt.js`)
 const app = express()
 const PORT = configObject.port
 
-console.log(`configObject`, configObject)
-
-// console.log(process.cwd())
-// console.log (process.pid)
-// console.log (process.memoryUsage())
-// console.log (process.argv)
-// console.log (process.version)
-
+//console.log(`configObject`, configObject)
 
 connectDb()
 
@@ -72,41 +66,28 @@ app.set(`views`, __dirname + `/views`)
 app.use(`/`,express.static(path.join(__dirname, '/public')));
 
 
-
-
 //cookies
 
-//app.use(cookieParser(`f1rm@un1k@`))
+app.use(cookieParser(process.env.SECRET_SESSIONS))
 
 //********************SESSION 
-//  //con fileStore se crea carpeta automatica en el servidor donde se almacena cada inicio.
-// const fileStore = FileStore(session)
+ //con fileStore se crea carpeta automatica en el servidor donde se almacena cada inicio.
+const fileStore = FileStore(session)
 
-// app.use(session({
-//     store: new fileStore({
-//         path: __dirname+`sessions`,
-//         ttl: 1000,
-//         retries: 0
-//     }), 
-//     secret: `f1rm@un1k@`,
-//     resave: true,
-//     saveUninitialized: true
-// })) 
-
-// app.post(`/login`, (req, res) =>{
-//     const { email , password} = req.body
-//     if ( email !0)
-// })
-
+app.use(session({
+    store: new fileStore({
+        path: __dirname+`sessions`,
+        ttl: 1000,
+        retries: 0
+    }), 
+    secret: process.env.SECRET_SESSIONS,
+    resave: true,
+    saveUninitialized: true
+})) 
 
 
 app.use(routerApp)
 
-//Configuración  del Socket
-
-// app.listen(PORT, () => {
-//     console.log(`Server listen on port ${PORT}`)
-// })
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Server listen on port ${PORT}`)

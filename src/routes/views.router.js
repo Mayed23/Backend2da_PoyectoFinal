@@ -1,14 +1,11 @@
 const { Router } = require(`express`)
 const { uploader } = require(`../utils/multer.js`)
-const { messageManagerMongo } = require(`../Dao/Mongo/messageManager.js`)
-const productManagerModel = require (`../Dao/Mongo/productsManager.js`)
-const cartsManagerMongo = require("../Dao/Mongo/cartsManager.js")
-const { userManagerMongo } = require("../Dao/Mongo/userManager.js")
-const { userModel } = require("../Dao/Mongo/models/user.model.js")
+
 const { passportCall } = require("../middleware/passportCall.meddlewars.js")
 const { authorization } = require("../middleware/authorization.js")
 const { createHash, isValidPass } = require("../utils/hash.js")
 const { generateToken, verifyToken } = require("../utils/jsonwebtoken.js")
+const { userService, messgeService, cartService, productService } = require("./service/service.js")
 
 
 
@@ -16,10 +13,6 @@ const { generateToken, verifyToken } = require("../utils/jsonwebtoken.js")
 
 
 const viewsRouter = Router()
-const prod =  new productManagerModel()
-const servCart = new cartsManagerMongo()
-const msg = new messageManagerMongo()
-const userReg = new userManagerMongo()
 
 
 
@@ -37,13 +30,15 @@ viewsRouter.get(`/register`, async (req, res) =>{
 })
 viewsRouter.post(`/login`, async (req, res)=>{
     const { email, password } = req.body
-    //console.log(req.body)
-    const user = await userReg.getUsersByEmail(email)
-    //console.log(user)
+        
+    const user = await userService.getUserByEmail(email)
+    
     if(!user) return res.status(401).send({status: `error`, error: `El Usuario no existe`})
     
     if(!isValidPass(password, user)){
-        return res.status(401).send({status: `error`, error: `Datos incorrectos`})
+        
+    return res.status(401).send({status: `error`, error: `Datos incorrectos`})
+       
     }
     const token = generateToken({
         first_name: user.first_name,
@@ -76,7 +71,7 @@ viewsRouter.get(`/register`, async (req, res) =>{
 viewsRouter.post(`/register`, async (req, res) => {
     const {first_name, last_name, age, email, password, role} = req.body
     try{
-        const user = await userReg.getUsersByEmail(email)
+        const user = await userService.getUserByEmail(email)
         console.log(user)
         if(user){
             return res.render(`register`, {error: `el ${email} ya existe`})
@@ -84,7 +79,7 @@ viewsRouter.post(`/register`, async (req, res) => {
         if(!first_name || !last_name || !age || !email || !password || !role){
             return res.render(`register`, {error: `Ingrese todos los datos`})
         }
-        const newUser = await userReg.createUser({
+        const newUser = await userService.addUser({
            
                 first_name,
                 last_name,
@@ -163,8 +158,8 @@ viewsRouter.get(`/users`, [
                 page: page || 1, 
                 lean: true
             }
-            const users = await userModel.paginate({}, options)
-            //console.log(users)
+            const users = await userService.getUsers({}, options)
+            console.log(users)
             const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = users
             res.status(200).render("users",{
                 showNav: true, 
@@ -192,15 +187,15 @@ viewsRouter.get(`/products`, async (req, res) => {
             lean: true
         }
         if (status != undefined) {
-            const products = await prod.getProducts({status: status}, options)
+            const products = await productService.getProducts({status: status}, options)
             res.status(200). json(products)
         }
         if (category != undefined) {
-            const products = await prod.getProducts({category: category}, options)
+            const products = await productService.getProducts({category: category}, options)
             res.status(200). json(products)
         } 
 
-        const products = await prod.getProducts({}, options)
+        const products = await productService.getProducts({}, options)
         console.log(products)
         const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = products
         res.render("products",{
@@ -222,7 +217,7 @@ viewsRouter.get(`/products`, async (req, res) => {
 viewsRouter.get("/product/:id", async (req, res) => {
     const prodId = req.params.id
     try{
-        const product = await prod.getProductById(prodId)
+        const product = await productService.getProductById(prodId)
         console.log(prodId)
         res.render("itemDetail", product)
     }catch(error){
@@ -233,7 +228,7 @@ viewsRouter.get("/product/:id", async (req, res) => {
 viewsRouter.get(`/carts/:cid`, async (req, res) =>{
     const cid = req.params
       try{
-        const cart = await servCart.addProductToCart(cid)
+        const cart = await cartService.addProductToCart(cid)
         if(!cart) 
             return res.status(404).json({msg: "Carrito no Existe"})
             res.render("carts", { prodId: cart.products})

@@ -6,19 +6,19 @@ const mongoosePaginate = require (`mongoose-paginate-v2`)
 const prodCollection =  `products`
 
 const productSchema = new Schema({
+
     title: {
         type: String,
-        max: 30,
-        required: true
+        Required: true
+    
     },
     price: {
         type: Number
     },
     description: {
         type: String,
-        max: 30,
-        requird: true
-    },
+        Required: true
+    },    
     thumbnail: {
         type: String
     },
@@ -30,7 +30,7 @@ const productSchema = new Schema({
     },
     code: {
         type: String,
-        required: true
+        Required: true
     },   
     category: {
         type: String

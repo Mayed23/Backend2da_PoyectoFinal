@@ -5,31 +5,31 @@ module.exports = class ProductDaoMongo {
     this.model = product;
   }
 
-  readProducts = async () => {
-    return await this.model.find();
-  };
+  // read = async () => {
+  //   return await this.model.find();
+  // };
 
-  addProducts = async (newProduct) => {
+  create = async (newProduct) => {
     return await this.model.create(newProduct);
   };
 
-  getProducts = async (query, options) => {
+  get = async (query, options) => {
     return await this.model.paginate(query, options);
   };
 
-  getProductById = async (pid) => {
+  getBy = async (pid) => {
     return await this.model.findById(pid);
   };
 
-  getProductsLimit = async (limit) => {
+  getLimit = async (limit) => {
     return await this.model.find({ limit: limit });
   };
 
-  updateProductsById = async (id, product) => {
+  update = async (id, product) => {
     return await this.model.findById(id, product);
   };
 
-  deleteProducts = async (id) => {
+  delete = async (id) => {
     return await this.model.deleteOne({ _id: id });
   };
 };

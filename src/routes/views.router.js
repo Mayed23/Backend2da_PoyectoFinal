@@ -8,18 +8,14 @@ const { generateToken, verifyToken } = require("../utils/jsonwebtoken.js")
 const { userService, messgeService, cartService, productService } = require("./service/service.js")
 
 
-
-
-
-
 const viewsRouter = Router()
-
 
 
 viewsRouter.get(`/login`, async (req, res) =>{
     res.render(`login`, {
         showNav: true
     })
+    
 })
 
 
@@ -58,8 +54,6 @@ viewsRouter.post(`/login`, async (req, res)=>{
     
 })
 
-
-
 viewsRouter.get(`/register`, async (req, res) =>{ 
     try {
       res.render(`register`);
@@ -79,7 +73,7 @@ viewsRouter.post(`/register`, async (req, res) => {
         if(!first_name || !last_name || !age || !email || !password || !role){
             return res.render(`register`, {error: `Ingrese todos los datos`})
         }
-        const newUser = await userService.addUser({
+        const newUser = await userService.createUser({
            
                 first_name,
                 last_name,
@@ -101,8 +95,7 @@ viewsRouter.post(`/register`, async (req, res) => {
 viewsRouter.get(`/profile`, async (req, res) =>{
 
     try{
-        const user  = verifyToken(req.cookies)
-           
+        const user  = verifyToken(req.cookies) 
         if(!user) return res.redirect(`/login`)
         res.render(`profile`,  user )
     }catch(error){
@@ -154,11 +147,11 @@ viewsRouter.get(`/users`, [
         const {limit, page, query } = req.query
         try{
             const options = { 
-                limit: limit || 5, 
-                page: page || 1, 
+                limit: limit || 10, 
+                page: page || 2, 
                 lean: true
             }
-            const users = await userService.getUsers({}, options)
+            const users = await userService.getAll({}, options)
             console.log(users)
             const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = users
             res.status(200).render("users",{
@@ -225,10 +218,15 @@ viewsRouter.get("/product/:id", async (req, res) => {
     }
 })
 
+viewsRouter.get(`/carts`, (req, res) => {
+    res.render(`carts`)
+    
+}) 
+
 viewsRouter.get(`/carts/:cid`, async (req, res) =>{
     const cid = req.params
       try{
-        const cart = await cartService.addProductToCart(cid)
+        const cart = await cartService.createCarts(cid)
         if(!cart) 
             return res.status(404).json({msg: "Carrito no Existe"})
             res.render("carts", { prodId: cart.products})
@@ -237,6 +235,10 @@ viewsRouter.get(`/carts/:cid`, async (req, res) =>{
     }
 })    
 
+viewsRouter.get(`/orders`, (req, res) => {
+    res.render(`orders`)
+    
+}) 
 viewsRouter.get(`/contacto`, (req, res)=>{
     res.render(`contactos`)
 })

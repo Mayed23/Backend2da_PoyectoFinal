@@ -1,4 +1,6 @@
-const cart  =  require(`./models/carts.model.js`) 
+const { sendOrderEmail } = require("../../utils/sendOrderEmail.js");
+const cart  =  require(`./models/carts.model.js`); 
+const orden = require("./models/orden.model.js");
 const  product  = require(`./models/products.model.js`) 
 
 
@@ -7,23 +9,24 @@ module.exports = class CartsDaoMongo {
     constructor(){
         this.model= {
             cart,
-            product
+            product, 
+            orden
         }
     }
 
-    getCarts = async () => {
+    get = async () => {
       return await this.model.cart.find({});
     };
     
-    addCarts = async () => {
+    create = async () => {
       return await this.model.cart.create({})
     };
     
-    getCartsById = async (cid) => {
+    getById = async (cid) => {
       return await this.model.cart.findById(cid)
     };
   
-    deleteCarts = async (id) => {
+    delete = async (id) => {
       return await this.model.cart.deleteOne({ _id: id });
 
     };  
@@ -105,5 +108,56 @@ module.exports = class CartsDaoMongo {
       }
   
     };
+
+    purchaseCart = async (cartId, user) => {
+      const cart = await this.model.cart.findById(cartId)
+
+      let productsOutOfStock = []
+      let productsInStock = []
+
+      for (const product of cart.products){
+
+        if(product.product.stock > product.quantity){
+          productsInStock.push(product)
+
+          await this.deleteProdToCart(cartId, product.product._id)
+
+          await this.model.product.updateOne(product.product._id, {stock: product.product.stock - product.quantity
+          })
+          await sumaTotal(cartId)
+        }else{
+          productsOutOfStock.push(product)
+        }
+      }
+
+      const total = productsInStock.reduce((acc, product) =>{
+        return acc + product.product.price * product.quantity
+      }, 0)
+
+      if(productsInStock.length === 0) return `No hay Stock suficiente para realizar su Compra`
+
+      const order = await this.model.orden.create({
+        
+        purchase: user.email,
+        product: productsInStock,
+        amount: total
+      })
+
+      await sumaTotal(cartId)
+
+      sendOrderEmail(order)
+      return order
+    }
+      
+    sumaTotal = async (carId) => {
+      const cart = await this.model.cart.findById(carId)
+      const total = cart.products.reduce ((acc, product) => {
+        return acc + product.price * product.quantity
+    }, 0)
+
+    await this.model.cart.findByIdAndUpdate ({_id: id}, { $set: { total}})
+
+    return total 
   
   }
+} 

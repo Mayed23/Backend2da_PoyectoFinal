@@ -5,7 +5,7 @@ const { dirname } = require(`path`)
 const storage = multer.diskStorage({
 
     destination: function(req, file, cb){
-        cb(null, `${dirname(__dirname)}/public/css`)
+        cb(null, `${dirname(__dirname)}/public`)
     },
     filename: function(req, file, cb){
         cb(null, `${Date.now()}-${file.originalname}`)

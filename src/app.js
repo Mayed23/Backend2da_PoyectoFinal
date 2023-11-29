@@ -11,16 +11,16 @@ const FileStore = require (`session-file-store`)
 const  MongoStore  = require (`connect-mongo`)
 
 
-const { connectDb, configObject } = require(`./config/confi.js`)
-const routerApp = require (`../src/routes`)
+
+const routerApp = require (`../src/routes/`)
 const { initializePassport } = require (`../src/config/passportJwt.js`)
+const {  configObject: {  port, connectDb, cookiekey }}= require("./config/confi.js")
 
 
 
 const app = express()
-const PORT = configObject.port
+const PORT = port || 8080
 
-//console.log(`configObject`, configObject)
 
 connectDb()
 
@@ -29,7 +29,7 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URL,
         mongoOptions: {
-            // useNewUrlParse: true,
+            //useNewUrlParse: true,
             useUnifiedTopology: true
             
         },        
@@ -68,22 +68,22 @@ app.use(`/`,express.static(path.join(__dirname, '/public')));
 
 //cookies
 
-app.use(cookieParser(process.env.SECRET_SESSIONS))
+app.use(cookieParser(cookiekey))
 
 //********************SESSION 
  //con fileStore se crea carpeta automatica en el servidor donde se almacena cada inicio.
-const fileStore = FileStore(session)
+// const fileStore = FileStore(session)
 
-app.use(session({
-    store: new fileStore({
-        path: __dirname+`sessions`,
-        ttl: 1000,
-        retries: 0
-    }), 
-    secret: process.env.SECRET_SESSIONS,
-    resave: true,
-    saveUninitialized: true
-})) 
+// app.use(session({
+//     store: new fileStore({
+//         path: __dirname+`sessions`,
+//         ttl: 1000,
+//         retries: 0
+//     }), 
+//     secret: process.env.SECRET_SESSIONS,
+//     resave: true,
+//     saveUninitialized: true
+// })) 
 
 
 app.use(routerApp)

@@ -1,4 +1,5 @@
-const { userService } = require("../routes/service/service")
+const UserDto = require("../Dto/user.dto.js")
+const { userService } = require("../routes/service/service.js")
 
 
 class UserController{
@@ -8,7 +9,12 @@ class UserController{
 
    getUsers = async (req, res) => {
     try{
-        let users = await this.userService.getUsers({})
+        const users = await this.userService.getAll({})
+        console.log(req)
+
+        if (!users){
+            res.send({status:`error`, error: `No se encontraron los usuarios`})
+        }
         res.send({
             status: `success`,
             payload: users
@@ -18,10 +24,12 @@ class UserController{
         }
     } 
     
-    getUserById = async (req, res) => {
-        try { 
-            let id= req.params.id 
+    getUserById= async (req, res) => {
+        try {
+            
+            let id = req.params.id 
             let user = await this.userService.getUserById(id)
+            console.log(user)
             res.send({
                 status: `success`,
                 payload: user
@@ -48,12 +56,12 @@ class UserController{
     createUser = async (req, res) => {
         const newUser = req.body
         try{
-            let { first_name, last_name, age, email, password, role } = newUser
+            let { first_name, last_name, age, email, password, role } = new UserDto(newUser)
             
             if( !first_name || !last_name || !age || !email || !password || !role) 
             res.send({ status: `error`, error: `Ingrese todos los campos`})
             
-            const user = await this.userService.addUser(newUser)
+            const user = await this.userService.createUser(newUser)
             console.log(user)
             res.status(200).json(user)
         }catch (error) {
@@ -64,7 +72,7 @@ class UserController{
 
     changePassword = async (req, res) => {
         try{
-            const user = await this.userService.changePassword(email, newPassword)
+            const user = await this.userService.updatePassword(email, newPassword)
             return `Su contraseña ha sido cambiada`
         }catch(error){
             console.log(error)
@@ -77,7 +85,7 @@ class UserController{
         try{
             await this.usersService.updateUser(id, updateUser)
             
-            const oneUser = await this.userService.getUserById(id)
+            const oneUser = await this.userService.getUserId(id)
             oneUser.set(updateUser)
             res.status(200).json({
                 msg: `Usuario Actualizado`, oneUser
@@ -92,7 +100,7 @@ class UserController{
     deleteUser =  async (req, res) => {
         let {id} = req.params
         try{
-            const suprUser = await this.userService.deleteUsers({ _id: id})
+            const suprUser = await this.userService.deleteUser({ _id: id})
             res.status(200).json({
                 msg: `Usuario Eliminado con Exito`, suprUser
             })

@@ -10,7 +10,7 @@ const {
     getProductsLimit,
     createProducts,
     updateProduct,
-    deleteProduct    
+    deleteProduct
 } = new ProductsController
 
 routerProducts.get("/", getProducts)       

@@ -4,15 +4,15 @@ class MessageDaoMongo {
 
     
     
-        getMessages(){
-            return `get messages`
+        async getMessages(){
+            return await messageModel.find().getPopulatedPaths.exec()
         }
-        getByMessages(obj){
+        async getByMessages(obj){
             return `get by messages`
         }
-        createMessages(){
-            return `create messages`
-        }
+        async addMessages(newMessage){
+            return await messageModel.create(newMessage)
+          }
         updateMessages(mid){
             return `update messages`
         }
@@ -22,26 +22,5 @@ class MessageDaoMongo {
 
         
     }
-
-//     async getMessages(){
-//         try{
-//             const message = await this.model.find().lean().exec()
-//             return message
-//         } catch (error){
-//             return (error)
-            
-//         }
-//     }
-
-//     async createMessage() {
-//         try{
-//             const newMessage = await this.model.createMessage(message)
-//             return(newMessage) 
-//         } catch (error){
-//             return (error)
-//         }
-//     }
-
-// }
 
 module. exports = MessageDaoMongo

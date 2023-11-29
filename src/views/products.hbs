@@ -1,31 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/src/public/css/css.js">
-</head>
-<body>
+<div class="container" >
     <h1>Productos</h1>
 
-<div class="card-productos" >
+    <div class="row row-cols-1 row-cols-md-4 g-4">
 
-    {{#each products}}
-        <div class="card-product">
-            <img src={{this.thumbnail}} class="card-img-top " alt="">
-                <div class="card-body">
-                    <h3> Nombre: {{this.title}}</h3>
-                    <h4> Modelo: {{this.description}}</h4>
-                    <p>US$ {{this.price}}</p>
-                    <a href="/product/{{this.id}}">
-                        <button class="btn btn-blue">Detalles</button>
-                    </a>
-                </div>   
-        </div>
-   
-    {{/each}}    
-        <center>
+        {{#each products}}
+        <div>
+            <div class="col">
+                    <div class="card mb-2" >
+                        <img src={{this.thumbnail}} class="card-img-top " alt="">
+                            <div class="card-body" >
+                                <h3> Nombre: {{this.title}}</h3>
+                                <h4> Modelo: {{this.description}}</h4>
+                                <p>US$ {{this.price}}</p>
+                                <a href="/product/{{this.id}}">
+                                    <button class="btn btn-outline-dark">Detalles</button>
+                                </a>
+                            </div>   
+                </div>
+            </div>    
+        </div>    
+
+        {{/each}}    
+        
+    </div>
+    <div>
+         <center>
         {{#if hasPrevPage}}
             <a href="/products?numPage={{prevPage}}"><button>Anterior</button></a>
         {{/if}}
@@ -36,10 +35,10 @@
             <a href="/products?numPage={{nextPage}}"><button>Siguiente</button></a>
         {{/if}}
         </center>
-</div>
-    
-</body>
-</html>
+    </div>
+</div>    
+
+
 
     
 

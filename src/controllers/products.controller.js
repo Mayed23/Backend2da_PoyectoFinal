@@ -1,16 +1,16 @@
-const { prroductService } = require("../routes/service/service");
+const { productService } = require("../routes/service/service");
 
 
 class ProductsController{
     constructor(){
-        this.productService = prroductService
+        this.productService = productService
      }
 
     getProducts = async (req, res) =>{
         const {limit, page, sort, category, status} = req.query
         try{
             const options = { 
-                limit: limit || 10, 
+                limit: limit || 12, 
                 page: page || 1, 
                 sort: { price: sort === "asc" ? 1 : -1,}, 
                 lean: true
@@ -61,7 +61,7 @@ class ProductsController{
     getProductsLimit = async (req, res) =>{
         try{
             const limit = req.params.limit
-            const products = await this.productService.getProductsLimit();
+            const products = await this.productService.getProductByLimit();
             const productsList = []
             for (let i = 0; i < limit; i++) {
               productsList.push(products[i]);
@@ -86,7 +86,7 @@ class ProductsController{
             
             res.send({ status: `error`, error: `Ingrese todos los campos`})
             
-            const prodNew = await this.productService.addProducts(newProduct)
+            const prodNew = await this.productService.createProduct(newProduct)
             
             res.status(200).json(prodNew)
         }catch(error){
@@ -99,10 +99,10 @@ class ProductsController{
         let id = req.params.id
         let updateProd = req.body
         try{
-            await productService.updateProductsById(id, updateProd)
+            await productService.updateProduct(id, updateProd)
             console.log(updateProd)
            
-            const prodOne = await this.productService.getProductById(id)
+            const prodOne = await this.productService.getProductId(id)
             prodOne.set(updateProd)
             res.status(200).json({
                msg: `Producto Actualizado`, prodOne
@@ -117,7 +117,7 @@ class ProductsController{
     deleteProduct = async (req, res) =>{
         let {id} = req.params
         try{
-           const deleteProd = await this.productService.deleteProducts({_id: id})
+           const deleteProd = await this.productService.deleteProduct({_id: id})
             res.status(200).json({
             msg: `Producto Eliminado con Exito`, deleteProd})
                         

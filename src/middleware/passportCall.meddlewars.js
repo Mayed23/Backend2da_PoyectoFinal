@@ -2,8 +2,6 @@ const passport = require("passport");
 const { Strategy } = require("passport-jwt");
 
 
-
-
 exports.passportCall = Strategy => {
     return async (req, res, next) => {
         passport.authenticate(Strategy, function(err, user, info){

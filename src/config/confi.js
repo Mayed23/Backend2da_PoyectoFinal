@@ -1,6 +1,7 @@
-const { connect } = require (`mongoose`)
 const dotenv = require (`dotenv`)
 const { program } = require("../utils/commander")
+const MongoSingleton = require("../utils/MongoSingleton")
+//const { connect } = require("mongoose")
 
 const { mode } = program.opts()
 
@@ -11,32 +12,36 @@ dotenv.config({
 })
 
 
+
 const configObject = {
     port: process.env.PORT,
-    mongo_url: process.env.MONGO_URL,
-    privateKey: process.env.PRIVATE_KEY,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: process.env.CALLBACK_URL
+    mongo_url:      process.env.MONGO_URL,
+    privateKey:     process.env.PRIVATE_KEY,
+    cookieKey:      process.env.SECRET_SESSIONS,
+    clientId:       process.env.CLIENT_ID,
+    clientSecret:   process.env.CLIENT_SECRET,
+    callbackURL:    process.env.CALLBACK_URL,
+    persistence:    process.env.PERSISTENCE,
+    connectDb: async () => await MongoSingleton.getInstance(process.env.MONGO_URL)
 
     
 }
 
 
-const connectDb = async () => {
-    try {
-        console.log(`Base de Datos conectada`)
-        return await connect(process.env.MONGO_URL)
+// const connectDb = async () => {
+//     try {
+//         console.log(`Base de Datos conectada`)
+//         return await connect(process.env.MONGO_URL)
 
-    } catch (error) {
-        console.log(error)
-    }
+//     } catch (error) {
+//         console.log(error)
+//     }
 
-}
-
-
+// }
 
 
 
 
-module.exports = { connectDb, configObject }
+
+
+module.exports = { configObject }

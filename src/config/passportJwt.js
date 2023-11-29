@@ -3,7 +3,6 @@ const pjwt = require (`passport-jwt`)
 const GitHubStrategy = require (`passport-github2`)
 const local = require(`passport-local`)
 const { createHash, isValidPass } = require(`../utils/hash.js`)
-const UserDaoMongo = require("../Dao/Mongo/userDaosMongo.js")
 const { userService } = require("../routes/service/service.js")
 
 
@@ -91,8 +90,7 @@ const initializePassport = () => {
         const user = await userService.getUserByEmail(profile._json.email)
         console.log(user)
         if(!user){
-            const email = profile._json.email || profile._json.id
-            
+            const email = profile._json.email 
             const newUser = {
             first_name: profile._json.name,
             last_name: ``,
@@ -101,7 +99,7 @@ const initializePassport = () => {
             password: ``,
             role: ``,
             }
-            const result = await userService.addUser(newUser)
+            const result = await userService.createUser(newUser)
             return done(null, result)
         }
         return done(null, user)

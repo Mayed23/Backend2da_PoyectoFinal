@@ -1,4 +1,4 @@
-const { cartService } = require("../routes/service/service.js");
+const { cartService, productService } = require("../routes/service/service.js");
 
 
 
@@ -10,7 +10,7 @@ class CartsController{
    createCarts = async (req, res) => {
     let cartNew = req.body
     try{
-        const cart = await this.cartService.addCarts(cartNew)
+        const cart = await this.cartService.createCarts(cartNew)
         res.status(200).json(cart)
     }catch(error){
         console.error('Error al crear el carrito de compras:', error);
@@ -36,10 +36,9 @@ class CartsController{
     
         try{
             let id = req.params.id
-            let cartId = await this.cartService.getCartsById(id)
-            if(!cartId) res.status(404)
-        
-            res.send({
+            let cartId = await this.cartService.getCartId(id)
+            if(!cartId) res.status(404).json({ message: `Carrito no encontrado`})
+                res.send({
                 status: `success`,
                 payload: cartId
             }) 
@@ -51,7 +50,7 @@ class CartsController{
     deleteCarts = async (req, res) => {
         let {id} = req.params
         try {
-            const cartId = await this.cartService.getCartsById(id);
+            const cartId = await this.cartService.getCartId(id);
             if (!cartId) {
               return "Carrito no encontrado";
             }
@@ -68,7 +67,7 @@ class CartsController{
         try {
             const carId = req.params.id
             const prodId = req.params.id
-            const result = await this.cartService.addProductToCart(carId, prodId)
+            const result = await this.cartService.addItemToCarts(carId, prodId)
             if(result.hasOwnProperty('error')) {
                 throw new Error(result.error.msg)
             }
@@ -78,6 +77,26 @@ class CartsController{
         } catch (error) {
             console.log(error)
             res.status(500).send(error)
+        }
+    }
+
+    createProductInUserCart = async (req, res) => {
+        try{
+            const prodId = req.params
+            const user = req.session
+
+            const product = await productService.getProductId(id)
+            if(!product) return res.status(404).json({
+                message: `Producto no encontrado`
+            })
+
+            const result = await cartService.addItemToCarts(user.cart, prodId)
+            res.status(200).json({
+                message: `Producto agregado al carrito`, products: response.products
+            })
+            
+        }catch(error){
+            console.log(error)
         }
     }
 
@@ -92,6 +111,22 @@ class CartsController{
             console.log(error)
         }
         
+    }
+
+    purchaseCart = async (req, res) => {
+        const carId = req.params.id
+        const user =  req.sesion.user
+        
+        try{
+            const cart = await this.cartService.getCartId(carId);
+            if(!cart) return res.status(404).json({message: `carrito no encontrado`})
+
+            const result = await cartService.purchaseCart(carId, user)
+
+            res.status(200).json({ message: `Compra realizada`, result})
+        }catch(error){
+            console.log(error)
+        }
     }
 
 }

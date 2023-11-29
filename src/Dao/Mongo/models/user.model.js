@@ -19,7 +19,7 @@ const userSchema =  new Schema({
     email: {
         type: String,
         Required: true,
-        unique: true
+        Unique: true
     },  
     
     password: {
@@ -30,7 +30,6 @@ const userSchema =  new Schema({
         Default: `user`
     }
  
-    // gender: String
     
 })
 

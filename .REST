@@ -27,7 +27,7 @@ GET   http://localhost:8080/api/products/652e90552274c45611fa49c3
  
 
 ###
-GET http://localhost:8080/api/carts/652b298fd1854792b6595cbf
+GET http://localhost:8080/api/carts/6564b56763606be91cdfc4ff
 
 
 ###
@@ -90,10 +90,10 @@ POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "first_name": "prueba812",
-    "last_name": "prueba812",
+    "first_name": "prueba80",
+    "last_name": "prieba80",
     "age": 18,
-    "email": "pp8812@gmail.com",
+    "email": "pp80@gmail.com",
     "pasword": "123456",
     "role": "user"
    
@@ -107,14 +107,14 @@ GET  http://localhost:8080/api/users/email/pp88@gmail.com
 GET  http://localhost:8080/api/users
 
 ###
-DELETE    http://localhost:8080/api/users/6553dd5b64f9eb192ac20b2b
+POST    http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "first_name": "prueba5",
-    "last_name": "prueba5",
+    "first_name": "prueba55",
+    "last_name": "prueba55",
     "age": 30,
-    "email": "pp55@gmail.com",
+    "email": "pp555@gmail.com",
     "pasword": "123456",
     "role": "user"
    
@@ -138,7 +138,7 @@ Content-Type: application/json
     }      
        
 ###
-DELETE   http://localhost:8080/api/products/6552cb96abfe8d85ccba9281
+GET   http://localhost:8080/api/users
 Content-Type: application/json
 
     {

@@ -16,15 +16,15 @@ class ProductsController{
                 lean: true
             }
             if (status != undefined) {
-                const products = await this.productService.getProducts({status: status}, options)
+                const products = await this.productService.get({status: status}, options)
                 res.status(200). json(products)
             }
             if (category != undefined) {
-                const products = await this.productService.getProducts({category: category}, options)
+                const products = await this.productService.get({category: category}, options)
                 res.status(200). json(products)
             } 
     
-            const products = await this.productService.getProducts({}, options)
+            const products = await this.productService.get({}, options)
             
             const{totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage} = products
             res.status(200).json({
@@ -46,7 +46,7 @@ class ProductsController{
     getProductById = async (req, res) =>{
         try{
             let id = req.params.id
-            let productId = await this.productService.getProductById(id)
+            let productId = await this.productService.getById(id)
             if(!productId) return `producto no encontrado`
             res.send({
                 status: `success`,
@@ -58,25 +58,6 @@ class ProductsController{
     
     }
 
-    getProductsLimit = async (req, res) =>{
-        try{
-            const limit = req.params.limit
-            const products = await this.productService.getProductByLimit();
-            const productsList = []
-            for (let i = 0; i < limit; i++) {
-              productsList.push(products[i]);
-            }
-            res.send({
-                status: `success`,
-                payload: productsList
-            })
-          
-        }catch(error){
-            console.log(error)
-        }
-        
-    }
-
     createProducts = async (req, res) => {
         const newProduct= req.body
         try{        
@@ -86,7 +67,7 @@ class ProductsController{
             
             res.send({ status: `error`, error: `Ingrese todos los campos`})
             
-            const prodNew = await this.productService.createProduct(newProduct)
+            const prodNew = await this.productService.create(newProduct)
             
             res.status(200).json(prodNew)
         }catch(error){
@@ -99,16 +80,14 @@ class ProductsController{
         let id = req.params.id
         let updateProd = req.body
         try{
-            await productService.updateProduct(id, updateProd)
+            await this.productService.update(id, updateProd)
             console.log(updateProd)
            
-            const prodOne = await this.productService.getProductId(id)
-            prodOne.set(updateProd)
-            res.status(200).json({
-               msg: `Producto Actualizado`, prodOne
+            const prodOne = await this.productService.getById(id)
+                res.status(200).json({
+                msg: `Producto Actualizado`, prodOne
             })
-
-            await prodOne.save()
+            console.log(prodOne)
         }catch(error){
             return `Cambios no realizados`
         }
@@ -117,7 +96,7 @@ class ProductsController{
     deleteProduct = async (req, res) =>{
         let {id} = req.params
         try{
-           const deleteProd = await this.productService.deleteProduct({_id: id})
+           const deleteProd = await this.productService.delete({_id: id})
             res.status(200).json({
             msg: `Producto Eliminado con Exito`, deleteProd})
                         

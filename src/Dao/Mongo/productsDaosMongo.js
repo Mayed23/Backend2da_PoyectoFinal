@@ -17,16 +17,17 @@ module.exports = class ProductDaoMongo {
     return await this.model.paginate(query, options);
   };
 
-  getBy = async (pid) => {
+  getById = async (pid) => {
     return await this.model.findById(pid);
   };
 
-  getLimit = async (limit) => {
-    return await this.model.find({ limit: limit });
-  };
-
   update = async (id, product) => {
-    return await this.model.findById(id, product);
+    const prod = await this.model.findById(id)
+    if(!product){
+    return`Producto no encontrado`
+    }
+    prod.set(product)
+    await prod.save()
   };
 
   delete = async (id) => {

@@ -5,7 +5,7 @@ class MessageController{
 
     getMessages = async (req, res) => {
         try{
-            const messages = await messgeService.getMessage()
+            const messages = await messgeService.getMessages()
             res.send({messages: messages})
         }catch(error){
             return(error)
@@ -15,7 +15,7 @@ class MessageController{
 
     createMessages = async (req, res) => {
         try{
-        const newMessage = await messgeService.createMessage()
+        const newMessage = await messgeService.addMessages()
         res.send({messages: newMessage})
         }catch(error){
             return(error)
@@ -23,7 +23,7 @@ class MessageController{
     }
 
     updateMessages = async (req, res) => {
-        const result = await messgeService.updateMessage()
+        const result = await messgeService.updateMessages()
         res.send({messages: result})
     } 
     

@@ -1,4 +1,3 @@
-const product = require("../Dao/Mongo/models/products.model")
 
 class ProducstRepository{
     constructor(dao){

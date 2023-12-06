@@ -1,13 +1,13 @@
 const passport = require("passport");
-const { Strategy } = require("passport-jwt");
 
 
-exports.passportCall = Strategy => {
+
+exports.passportCall = strategy => {
     return async (req, res, next) => {
-        passport.authenticate(Strategy, function(err, user, info){
+        passport.authenticate(strategy, function(err, user, info){
             if(err) return next(err)
             if(!user) return res.status(401).send({status: `error`, error: info.message ? info.message : info.toString()})
-            req.use = user
+            req.user = user.user
             next()
         })(req, res, next)
     }

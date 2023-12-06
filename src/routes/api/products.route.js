@@ -7,7 +7,6 @@ const routerProducts = Router()
 const {
     getProducts,
     getProductById,
-    getProductsLimit,
     createProducts,
     updateProduct,
     deleteProduct
@@ -15,7 +14,6 @@ const {
 
 routerProducts.get("/", getProducts)       
 routerProducts.get("/:id", getProductById)
-routerProducts.get("/limit/:limit", getProductsLimit)
 routerProducts.post("/", createProducts)   
 routerProducts.put("/:id", updateProduct)
 routerProducts.delete("/:id", deleteProduct)

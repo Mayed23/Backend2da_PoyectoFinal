@@ -1,7 +1,6 @@
 const UserDto = require("../Dto/user.dto.js")
 const { userService } = require("../routes/service/service.js")
 
-
 class UserController{
     constructor(){
         this.userService = userService
@@ -9,7 +8,7 @@ class UserController{
 
    getUsers = async (req, res) => {
     try{
-        const users = await this.userService.getAll({})
+        const users = await this.userService.get({})
         console.log(req)
 
         if (!users){
@@ -28,7 +27,7 @@ class UserController{
         try {
             
             let id = req.params.id 
-            let user = await this.userService.getUserById(id)
+            let user = await this.userService.getById(id)
             console.log(user)
             res.send({
                 status: `success`,
@@ -42,7 +41,7 @@ class UserController{
     getUserByEmail = async (req, res) => {
         try { 
             let email = req.params.email
-            let user = await this.userService.getUserByEmail(email)
+            let user = await this.userService.getByEmail(email)
             console.log(user)
             res.send({
                 status: `success`,
@@ -61,7 +60,7 @@ class UserController{
             if( !first_name || !last_name || !age || !email || !password || !role) 
             res.send({ status: `error`, error: `Ingrese todos los campos`})
             
-            const user = await this.userService.createUser(newUser)
+            const user = await this.userService.create(newUser)
             console.log(user)
             res.status(200).json(user)
         }catch (error) {
@@ -72,7 +71,7 @@ class UserController{
 
     changePassword = async (req, res) => {
         try{
-            const user = await this.userService.updatePassword(email, newPassword)
+            const user = await this.userService.update(email, newPassword)
             return `Su contraseña ha sido cambiada`
         }catch(error){
             console.log(error)
@@ -83,24 +82,22 @@ class UserController{
         let id= req.params.id
         let updateUser = req.body
         try{
-            await this.usersService.updateUser(id, updateUser)
-            
-            const oneUser = await this.userService.getUserId(id)
-            oneUser.set(updateUser)
-            res.status(200).json({
-                msg: `Usuario Actualizado`, oneUser
-            })
-            await oneUser.save()
+            await this.userService.update(id, updateUser)
+            console.log (updateUser)
+
+            const userOne = await this.userService.getById(id)
+                res.status(200).json({
+                msg: `Usuario Actualizado`, userOne
+                })
         }catch(error){
             return `Cambios no realizados`
-        } 
-             
-     }
-    
+        }
+    }
+       
     deleteUser =  async (req, res) => {
         let {id} = req.params
         try{
-            const suprUser = await this.userService.deleteUser({ _id: id})
+            const suprUser = await this.userService.delete({ _id: id})
             res.status(200).json({
                 msg: `Usuario Eliminado con Exito`, suprUser
             })

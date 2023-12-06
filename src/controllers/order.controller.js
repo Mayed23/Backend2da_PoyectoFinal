@@ -7,7 +7,7 @@ class OrderController {
 
     getOrder = async (req, res) => {
         try{
-            const order = await this.orderService.getOrder()
+            const order = await this.orderService.get()
             res.status(200).json({
                status: "success", 
                payload: order
@@ -21,7 +21,7 @@ class OrderController {
     getOrderById = async (req, res) => {
         const id = req.params.id
         try{
-            const order = await this.orderService.getOrderById(id)
+            const order = await this.orderService.getBy(id)
             res.status(200).json({
                status: "success", 
                payload: order
@@ -34,7 +34,7 @@ class OrderController {
     deleteOrder = async (req, res) => {
         let {id} = req.params.id
         try{
-            const order = await this.orderService.deleteOrder({ _id: id})
+            const order = await this.orderService.delete({ _id: id})
             res.status(200).json({
                 msg: `Orden Eliminada con Exito`, order
             })
@@ -46,7 +46,7 @@ class OrderController {
     createOrder = async (req, res) => {
         try{
             const user = req.user
-            const cart = await cartService.getCart(user.email)
+            const cart = await cartService.get(user.email)
 
         }catch(error){
             console.log(error)

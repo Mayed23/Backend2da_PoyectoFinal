@@ -5,13 +5,19 @@ const collection = `carts`
 
 
 const cartSchema = new Schema({
-    products: [{
-      product:{
+    products: {
+      type:[{
+        product:{
         type: Schema.Types.ObjectId,
         ref: "products",
       },
       quantity: Number
-    }]
+      }]
+    },
+    total: {
+      type: Number,
+      default: 0
+    }
   });
   
   cartSchema.pre(/^find/, function (next) {

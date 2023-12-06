@@ -43,7 +43,7 @@ const initializePassport = () => {
         new localStrategy({ passReqToCallback: true, usernameField: `email`}, async (req, username, password, done) => {
           const { first_name, last_name, age, email } = req.body
           try{
-            let user = await userService.getUserByEmail(username)
+            let user = await userService.getByEmail(username)
             if (user) {
               console.log(`Usuario ya existe`)
               return done (null,false)
@@ -56,7 +56,7 @@ const initializePassport = () => {
               password: createHash(password),
               role
             }
-            let result = await userService.createUser(newUser)
+            let result = await userService.create(newUser)
             return done(null, result)
           }catch(error){
             return done(`Error al ingresar el usuario` + error)
@@ -66,7 +66,7 @@ const initializePassport = () => {
 
     passport.use(`login`, new localStrategy({usernameField: `email`}, async (username, password, done) =>{
         try{
-          const user = await userService.getUserByEmail(username)
+          const user = await userService.getByEmail(username)
           if (!user){
             console.log(`EL usuario no Existe`)
             return( null, false)
@@ -87,7 +87,7 @@ const initializePassport = () => {
     }, async (accessToken, refreshToken, profile, done) => {
         //console.log(`profile:`, profile)
         try{
-        const user = await userService.getUserByEmail(profile._json.email)
+        const user = await userService.getByEmail(profile._json.email)
         console.log(user)
         if(!user){
             const email = profile._json.email 
@@ -99,7 +99,7 @@ const initializePassport = () => {
             password: ``,
             role: ``,
             }
-            const result = await userService.createUser(newUser)
+            const result = await userService.create(newUser)
             return done(null, result)
         }
         return done(null, user)
@@ -114,7 +114,7 @@ const initializePassport = () => {
       })
       
       passport.deserializeUser(async(id, done) => {
-        let user = await userService.getUserById(id)
+        let user = await userService.getById(id)
         done(null, user._id)
       })
 

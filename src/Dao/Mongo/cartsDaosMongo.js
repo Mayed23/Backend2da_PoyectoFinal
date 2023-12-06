@@ -22,8 +22,8 @@ module.exports = class CartsDaoMongo {
       return await this.model.cart.create({})
     };
     
-    getById = async (cid) => {
-      return await this.model.cart.findById(cid)
+    getById = async (id) => {
+      return await this.model.cart.findById(id)
     };
   
     delete = async (id) => {

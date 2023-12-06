@@ -9,7 +9,7 @@ class CartsRepository{
         return await this.dao.get()
     }
     async getCartId(id){
-        return await this.dao.getById()
+        return await this.dao.getById(id)
     }
 
     async createCarts(){

@@ -9,7 +9,7 @@ class UserDaoMongo {
     //     return await this.model.find();
     // }
 
-    async get(){
+    async get(query, options){
         return await this.model.find()
        
     }
@@ -32,7 +32,12 @@ class UserDaoMongo {
      }
 
     async update(id, user){
-        return await this.model.findById(id, user)
+        const userId = await this.model.findById(id)
+        if(!user){
+        return`Usuario no existe`
+        }
+        userId.set(user)
+        await userId.save()
     }
 
     async delete(id){

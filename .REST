@@ -158,7 +158,7 @@ Content-Type: application/json
 
 
 ###
-GET   http://localhost:8080/api/products
+GET   http://localhost:8080/api/products/limit/:2
 
  
 

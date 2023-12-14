@@ -11,7 +11,7 @@ const UserDaoMongo = require("../../Dao/Mongo/userDaosMongo.js");
 //const UserRepository = require("../../repositories/users.repositories.js");
 
 //const OrderRepository = require("../../repositories/orderRepositories.js");
-const OrdenDaoMongo = require("../../Dao/Mongo/ordenDaoMongo.js");
+const TicketDaoMongo = require("../../Dao/Mongo/ticketDaoMongo.js");
 
 
 
@@ -21,12 +21,12 @@ const userService    = new UserDaoMongo()
 const productService = new ProductDaoMongo()
 const cartService   = new CartsDaoMongo()
 const messgeService  = new MessageDaoMongo()
-const orderService   = new OrdenDaoMongo()
+const ticketService   = new TicketDaoMongo()
 
 module.exports = {
     userService,
     productService,
     cartService,
     messgeService,
-    orderService
+    ticketService
 }

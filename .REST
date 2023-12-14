@@ -19,8 +19,7 @@ Content-Type: application/json
       
 
 ###
-GET   http://localhost:8080/api/products/652e8dbb036de73c72e0be29
-
+GET   http://localhost:8080/api/products
 
 ###
 GET   http://localhost:8080/api/products/652e90552274c45611fa49c3
@@ -48,30 +47,72 @@ GET http://localhost:8080/api/carts/652b091e08c04721038bafab
 
 
 ###
-POST   http://localhost:8080/api/carts/652b091e08c04721038bafab/product/652e90552274c45611fa49c3
+POST   http://localhost:8080/api/carts/652b091e08c04721038bafab/product/655e7f3b271f147cd5cf70fb
 
 {
-    "product": "652e90552274c45611fa49c3",
+
+    "id": "655e7f3b271f147cd5cf70fb",
     "quantity": 2
 }
-
-
-###
-
-GET  http://localhost:8080/api/users
-
 
 ###
 GET  http://localhost:8080/api/users/6551190cb8a912e07a9c3894
 
-
+###
+GET  http://localhost:8080/api/carts
 
 
 ###
-GET  http://localhost:8080/api/carts/652e83679d8b1134b6186020
+GET http://localhost:8080/api/carts/652b094008c04721038bafad
 
 ###
-POST http://localhost:8080/api/carts/652b091e08c04721038bafab/product/652e8e50036de73c72e0be2b
+POST  http://localhost:8080/api/carts/652b094008c04721038bafad/product/6537e42c40d07e6a95d9195f
+
+Content-Type: application/json
+
+{
+   "_id": "6537e42c40d07e6a95d9195f",
+    "title": "Cambiado por luis3",
+    "price": 99.99,
+    "description": "Este es un producto de prueba",
+    "thumbnail": "fd",
+    "status": true,
+    "stock": 2,
+    "code": "123956",
+    "category": "Prueba",
+    "__v": 0,
+    "id": "6537e42c40d07e6a95d9195f"
+}    
+
+
+###
+PUT  http://localhost:8080/api/products/6537e42c40d07e6a95d9195f
+Content-Type: application/json
+
+{
+   "_id": "6537e42c40d07e6a95d9195f",
+    "title": "Cambiado por luis3",
+    "price": 99.99,
+    "description": "Este es un producto de prueba",
+    "thumbnail": "fd",
+    "status": true,
+    "stock": 2,
+    "code": "123956",
+    "category": "Prueba",
+    "__v": 0,
+    "id": "6537e42c40d07e6a95d9195f"
+}    
+
+
+###
+POST  http://localhost:8080/api/carts/652b094008c04721038bafad/purchase
+Content-Type: application/json
+
+  
+
+
+
+
 
 ###
 GET http://localhost:8080/api/messages
@@ -86,15 +127,15 @@ PUT  http://localhost:8080/api/messages/321
 DELETE  http://localhost:8080/api/messages/321
 
 ###
-POST http://localhost:8080/api/users
+POST  http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "first_name": "prueba80",
-    "last_name": "prieba80",
-    "age": 18,
-    "email": "pp80@gmail.com",
-    "pasword": "123456",
+    "first_name": "Jaime",
+    "last_name": "Lira",
+    "age": 26,
+    "email": "jaimelira@gmail.com",
+    "password": "123456",
     "role": "user"
    
 }
@@ -121,8 +162,21 @@ Content-Type: application/json
 }
 
 ###
-GET   http://localhost:8080/api/products/6552cb96abfe8d85ccba9281
+PUT http://localhost:8080/api/users/656f2cdea214b8ce91dce5b4
 Content-Type: application/json
+
+{
+    "first_name": "Luis",
+    "last_name": "García",
+    "age": 35,
+    "email": "lg@gmail.com",
+    "password": "$2b$10$8mm9.q5hKHpKcw1knHyngeRUuZyZRi5rFnvKWcPX/LQAA6lcRy8dO",
+    "role": "user"
+}
+
+###
+GET   http://localhost:8080/api/products/6552cb96abfe8d85ccba9281
+
 
     {
         
@@ -138,29 +192,106 @@ Content-Type: application/json
     }      
        
 ###
-GET   http://localhost:8080/api/users
-Content-Type: application/json
+GET   http://localhost:8080/api/users/656f2d4da214b8ce91dce5bc
 
-    {
-        
-        "title": "prueba4",
-        "price": 20,
-        "description": "prueba4",
-        "thumbnail": "imagenPrueba4",
-        "status":"true",
-        "stock":"35",
-        "code": "9998",
-        "category": "1"            
-            
-    }      
-       
+  
       
 
 
 ###
-GET   http://localhost:8080/api/products/limit/:2
+PUT   http://localhost:8080/api/products/6537e42c40d07e6a95d9195f
+Content-Type: application/json
 
+{
+    "_id": "6537e42c40d07e6a95d9195f",
+    "title": "Cambiado por luis3",
+    "price": 99.99,
+    "description": "Este es un producto de prueba",
+    "thumbnail": "fd",
+    "status": true,
+    "stock": 0,
+    "code": "123956",
+    "category": "Prueba",
+    "__v": 0
+}
  
+###
+GET http://localhost:8080/api/order
 
+###
+GET http://localhost:8080/api/carts
+
+
+###
+GET http://localhost:8080/api/carts/652b091e08c04721038bafab
+
+
+###
+POST  http://localhost:8080/api/carts/65777da452e7f3e603b65813/product/653587e0e538b6178ac5a6d4
+Content-Type: application/json
+
+{
+   "_id": "653587e0e538b6178ac5a6d4",
+    "title": "Filtro de Gasolina",
+    "price": 28,
+    "description": "Filtro para modelo Corsa",
+    "thumbnail": "imag2",
+    "status": true,
+    "stock": 17,
+    "code": "1243",
+    "category": "2",
+    "__v": 0,
+    "id": "653587e0e538b6178ac5a6d4"
+}
+
+
+###
+GET  http://localhost:8080/api/carts/657636688306ec8b4d3d9174
+
+###
+GET  http://localhost:8080/api/products/653587e0e538b6178ac5a6d4
+
+
+###
+POST  http://localhost:8080/api/carts/65763aa40f4409a9a6f5906f/product/653587e0e538b6178ac5a6d4
+Content-Type: application/json
+
+{
+   "_id": "653587e0e538b6178ac5a6d4",
+    "title": "Filtro de Gasolina",
+    "price": 28,
+    "description": "Filtro para modelo Corsa",
+    "thumbnail": "imag2",
+    "status": true,
+    "stock": 17,
+    "code": "1243",
+    "category": "2",
+    "__v": 0,
+    "id": "653587e0e538b6178ac5a6d4"
+}
+
+
+###
+POST   http://localhost:8080/api/carts/65763aa40f4409a9a6f5906f/product/6537e42c40d07e6a95d9195f
+Content-Type: application/json
+
+{
+    "_id": "6537e42c40d07e6a95d9195f",
+    "title": "Cambiado por luis3",
+    "price": 99.99,
+    "description": "Este es un producto de prueba",
+    "thumbnail": "fd",
+    "status": true,
+    "stock": 0,
+    "code": "123956",
+    "category": "Prueba",
+    "__v": 0
+}
+
+###
+GET  http://localhost:8080/api/carts/65763aa40f4409a9a6f5906f
+
+###
+POST  http://localhost:8080/api/order/
 
 

@@ -1,4 +1,4 @@
-const { userModel } = require("./models/user.model");
+const { userModel } = require("./models/user.model.js");
 
 class UserDaoMongo {
     constructor(){
@@ -34,7 +34,7 @@ class UserDaoMongo {
     async update(id, user){
         const userId = await this.model.findById(id)
         if(!user){
-        return`Usuario no existe`
+        return `Usuario no existe`
         }
         userId.set(user)
         await userId.save()

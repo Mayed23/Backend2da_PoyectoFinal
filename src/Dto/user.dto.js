@@ -5,7 +5,7 @@ class UserDto {
         this.last_name  = newUser.last_name
         this.age        = newUser.age
         this.email      = newUser.email
-        this.password   = newUser.password
+        this.password   = newUser.createHash(password)
         this.role       = newUser.role
     }
 }

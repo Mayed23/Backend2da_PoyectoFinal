@@ -1,7 +1,7 @@
-const { sendOrderEmail } = require("../../utils/sendOrderEmail.js");
+//const { sendEmail } = require("../../utils/sendOrderEmail.js");
 const cart  =  require(`./models/carts.model.js`); 
-const orden = require("./models/orden.model.js");
-const  product  = require(`./models/products.model.js`) 
+const product  = require(`./models/products.model.js`); 
+const ticket = require("./models/ticket.model.js");
 
 
 
@@ -10,13 +10,21 @@ module.exports = class CartsDaoMongo {
         this.model= {
             cart,
             product, 
-            orden
+            ticket
         }
     }
 
     get = async () => {
       return await this.model.cart.find({});
     };
+
+    getByUser = async (userId) => {
+      const cart =  await this.model.cart.find({userId})
+      if(cart == undefined){
+        return this.model.cart.create({userId})
+      }
+      return cart[0]
+    }
     
     create = async () => {
       return await this.model.cart.create({})
@@ -31,76 +39,110 @@ module.exports = class CartsDaoMongo {
 
     };  
   
-    addProductToCart = async (carId, prodId) => {
-      
-          //CODIGO LOGICA PENDIENTE DE INCORPORAR....
+
+    addProductToCart = async (cartId = 0, productId) => {
+      let existingCart = {}
       try {
-        const existProduct = await this.model.product.findById(prodId)
-        if (!existProduct) return {
-          error: {
-            status: 404,
-            msg: 'Producto no existe'
-          }
-        }
-  
-        const existCart = await this.model.cart.findById(carId)
-        if (!existCart) return {
-          error: {
-            status: 404,
-            msg: 'Cart no existe'
-          }
-        }
-  
-        const productsCart = existCart.products.find(p => p.product._id.toString() === existProduct._id.toString())
-  
-        if (productsCart === undefined) {
-          console.log('Crea Producto')
-          existCart.products.push({
-            product: existProduct._id,
-            quantity: 1
-          })
-        } else {
-          console.log('Actualiza Producto')
-          const productsUpdated = existCart.products.map(p => {
-            if (p.product._id.toString() === existProduct._id.toString()) {
-              return {
-                ...p,
-                quantity: p.quantity + 1
-              }
+        // Verificar si el producto existe
+        const existingProduct = await this.model.product.findById(productId);
+        if (!existingProduct) {
+          return {
+            error: {
+              status: 404,
+              msg: 'Producto no existe'
             }
-            return p
-          })
-  
-          existCart.products = productsUpdated
+          };
         }
-  
-        await existCart.save()
-  
-        return existCart
-  
-      } catch (error) {
-        console.log(error);
-        throw error
+        if(cartId == 0){
+         
+         existingCart =  await this.model.cart.create({})
+        }else{
+          existingCart = await this.model.cart.findById(cartId);
+        }
+        console.log("Este es el resultado de Model cart", existingCart)
+        if (existingCart == {}) {
+          
+          return {
+            error: {
+              status: 404,
+              msg: 'Carrito no existe'
+            }
+          };
+        }
+        
+        console.log('Cart antes de Agregar productos' , existingCart.products)
+        
+        // Verificar si el producto ya está en el carrito
+        const productInCart = existingCart.products.find(p => p.product._id.toString() === existingProduct._id.toString());
+    
+        console.log('Product In Cart',productInCart)
+        if (productInCart === undefined) {
+          console.log('******* No Existe Producto en el Carrito *****');
+          
+
+          // Si el producto  está en el carrito, verificar si hay suficiente stock
+          if (existingProduct.stock < 1) {
+            return {
+              error: {
+                status: 400,
+                msg: 'No hay suficiente stock para el producto'
+              }
+            };
+          }
+    
+          console.log('Crear Producto en el Carrito');
+          existingCart.products.push({
+            product: existingProduct._id,
+            quantity: 1
+          });
+
+        } else {
+          // Si el producto ya está en el carrito, verificar si hay suficiente stock para aumentar la cantidad
+          console.log('========== Si Existe Producto en el Carrito ========');
+          
+            if (existingProduct.stock < (productInCart.quantity + 1)) {
+              return {
+                error: {
+                  status: 400,
+                  msg: 'No hay suficiente stock para aumentar la cantidad del producto en el carrito'
+                }
+              };
+            }
+    
+          console.log('Actualizar Cantidad del Producto en el Carrito');
+          productInCart.quantity += 1;
+        }
+
+        // Actualizar el stock del producto
+        existingProduct.stock -= 1;
+        // Guardar los cambios en el producto y el carrito
+        await Promise.all([existingProduct.save(), existingCart.save()]);
+    
+        return existingCart;
+      }catch (error) {
+        console.error(error);
+        throw error;
       }
     };
-  
+      
+    
     deleteProdToCart = async (cartId, prodId) => {
       try {
   
-        const existCart = await this.model.cart.findById(cartId)
-        if (!existCart) return {
+        const existingCart = await this.model.cart.findById(cartId)
+        if ( existingCart) return {
           error: {
             status: 404,
             msg: 'Cart no existe'
           }
         }
-        const productsCart = existCart.products.filter(p => p.product._id.toString() !== prodId)
+        const productsCart = existingCart.products.filter(p => p.product._id.toStri() !== prodId)
   
-        existCart.products = productsCart
+       existingCart.products = productsCart
   
-        await existCart.save()
+        await existingCart.save()
   
-        return existCart
+        return existingCart
   
       } catch (error) {
         console.log(error);
@@ -110,54 +152,66 @@ module.exports = class CartsDaoMongo {
     };
 
     purchaseCart = async (cartId, user) => {
-      const cart = await this.model.cart.findById(cartId)
-
-      let productsOutOfStock = []
-      let productsInStock = []
-
-      for (const product of cart.products){
-
-        if(product.product.stock > product.quantity){
-          productsInStock.push(product)
-
-          await this.deleteProdToCart(cartId, product.product._id)
-
-          await this.model.product.updateOne(product.product._id, {stock: product.product.stock - product.quantity
-          })
-          await sumaTotal(cartId)
-        }else{
-          productsOutOfStock.push(product)
+      const cart = await this.model.cart.findById(cartId);
+    
+      let productsOutOfStock = [];
+      let productsInStock = [];
+    
+      for (const productEntry of cart.products) {
+        const product = productEntry.product;
+    
+        if (product.stock >= productEntry.quantity) {
+          productsInStock.push(product);
+    
+          // Realiza la acción necesaria si hay suficiente stock
+          await this.deleteProdToCart(cartId, product._id);
+          await this.model.product.findByIdAndUpdate(
+            product._id,
+            { $inc: { stock: -productEntry.quantity } }, // Utiliza $inc para decrementar el stock
+          );
+        } else {
+          productsOutOfStock.push(product);
         }
       }
-
-      const total = productsInStock.reduce((acc, product) =>{
-        return acc + product.product.price * product.quantity
-      }, 0)
-
-      if(productsInStock.length === 0) return `No hay Stock suficiente para realizar su Compra`
-
+    
+      // Si no hay productos con suficiente stock, detén la compra
+      if (productsInStock.length === 0) {
+        return `No hay Stock suficiente para realizar su Compra`;
+      }
+    
+      const total = productsInStock.reduce((acc, productEntry) => {
+        return acc + productEntry.product.price * productEntry.quantity;
+      }, 0);
+    
       const order = await this.model.orden.create({
-        
         purchase: user.email,
         product: productsInStock,
-        amount: total
-      })
-
-      await sumaTotal(cartId)
-
-      sendOrderEmail(order)
-      return order
-    }
-      
-    sumaTotal = async (carId) => {
-      const cart = await this.model.cart.findById(carId)
-      const total = cart.products.reduce ((acc, product) => {
-        return acc + product.price * product.quantity
-    }, 0)
-
-    await this.model.cart.findByIdAndUpdate ({_id: id}, { $set: { total}})
-
-    return total 
+        amount: total,
+      });
+    
+      // Actualiza el total del carrito después de la compra
+      await this.sumaTotal(cartId);
+    
+      // Enviar correo electrónico de confirmación de pedido
+      sendOrderEmail(order);
+    
+      return order;
+    };
   
-  }
-} 
+
+    sumaTotal = async (carId) => {
+      const cart = await this.model.cart.findById(carId);
+      const total = cart.products.reduce((acc, product) => {
+        return acc + product.product.price * product.quantity;
+      }, 0);
+    
+      await this.model.cart.findByIdAndUpdate(
+        { _id: carId },
+        { $set: { total: total } }
+      );
+    
+      return total;
+  };
+
+}  
+ 

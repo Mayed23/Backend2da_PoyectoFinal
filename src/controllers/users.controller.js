@@ -8,11 +8,12 @@ class UserController{
 
    getUsers = async (req, res) => {
     try{
-        const users = await this.userService.get({})
-        console.log(req)
-
-        if (!users){
-            res.send({status:`error`, error: `No se encontraron los usuarios`})
+        const users = await this.userService.get()
+            if (!users){
+            res.send({
+                status:`error`, 
+                error: `No se encontraron los usuarios`
+            })
         }
         res.send({
             status: `success`,
@@ -62,7 +63,7 @@ class UserController{
             
             const user = await this.userService.create(newUser)
             console.log(user)
-            res.status(200).json(user)
+            res.status(200).json(newUser)
         }catch (error) {
             console.error('Error al agregar el usuario:', error);
             return 'Error al agregar el usuario';
@@ -71,8 +72,9 @@ class UserController{
 
     changePassword = async (req, res) => {
         try{
-            const user = await this.userService.update(email, newPassword)
+            await this.userService.UpdatePassword(email, newPassword)
             return `Su contraseña ha sido cambiada`
+           
         }catch(error){
             console.log(error)
         } 

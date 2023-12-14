@@ -10,6 +10,7 @@ const {
   messgeService,
   cartService,
   productService,
+  ticketervice
 } = require("./service/service.js");
 
 const viewsRouter = Router();
@@ -25,6 +26,7 @@ viewsRouter.get(`/register`, async (req, res) => {
     showNav: true,
   });
 });
+
 viewsRouter.post(`/login`, async (req, res) => {
   const { email, password } = req.body;
 
@@ -45,16 +47,16 @@ viewsRouter.post(`/login`, async (req, res) => {
   const token = generateToken({
     first_name: user.first_name,
     last_name: user.last_name,
-    email: user.email,
+    email: user.email,  
     role: user.role,
   });
-
+   const destiny = (user.role == `admin`)? `/users` : `/products`
   res
     .cookie(`cookieToken`, token, {
       maxAge: 60 * 60 * 10000,
       httpOnly: true,
     })
-    .redirect("/users");
+    .redirect(destiny);
 
   // .status(200).send({
   //     status: `success`,
@@ -119,9 +121,33 @@ viewsRouter.get(`/logout`, async (req, res) => {
   });
 });
 
-viewsRouter.get(`/subirarch`, (req, res) => {
+viewsRouter.get(`/subirarch`, async (req, res) => {
   res.render(`subirArch`);
 });
+
+
+viewsRouter.get(`/changePassword`, async (req, res) =>{
+    try{
+      res.render(`changePassword`)
+    }catch(error){
+      console.log(error)
+    }
+})
+
+viewsRouter.post(`/changePassword`, async (req, res) => {
+  const { email, password } = req.body
+    try{
+      const user = await userService.getByEmail(email)
+        if(!user) return res.render(`changePassword`, { error : `El ususario ${email} no existe`})
+
+      await userService.UpdatePassword(email,createHash(password))
+      console.log(user)
+      res.redirect(`/login`)
+    }catch(error){
+      console.log(error)
+    }
+})
+
 
 viewsRouter.post(`/subirarch`, uploader.single(`file`), (req, res) => {
   if (!req.file)
@@ -142,6 +168,7 @@ viewsRouter.post(`/messages`, async (req, res) => {
   await msg.createMessage(newMessage);
   console.log(message);
 });
+
 viewsRouter.post(`/messages`, uploader.single(`file`), (req, res) => {
   if (!req.file)
     return res
@@ -149,6 +176,7 @@ viewsRouter.post(`/messages`, uploader.single(`file`), (req, res) => {
       .send({ status: `error`, error: `No se pudo enviar el mensaje` });
   res.send({ status: `success`, payload: `mensaje enviado` });
 });
+
 viewsRouter.get(
   `/users`,
   [passportCall(`jwt`), authorization(`admin`)],
@@ -230,29 +258,54 @@ viewsRouter.get(`/products`, async (req, res) => {
 
 viewsRouter.get("/product/:id", async (req, res) => {
   const prodId = req.params.id;
-  try {
-    const product = await productService.getBy(prodId);
-    console.log(prodId);
+  const email = "jp@gmail.com"
+    try {
+    let product = await productService.getById(prodId);
+    const user = await userService.getByEmail(email)
+    let cart = await cartService.getByUser(user._id.toString())
+    product.cartId = cart._id.toString()    
     res.render("itemDetail", product);
   } catch (error) {
     console.log(error);
   }
 });
 
+
+
+// viewsRouter.get(`/carts`, async (req, res) =>{
+//    res.render(`carts`)
+// })
+
 viewsRouter.get(`/carts/:cid`, async (req, res) => {
-  const {cid} = req.params;
+  const {cid} = req.params
   try {
     const cart = await cartService.getById(cid);
+    console.log(cart)
     if (!cart) return res.status(404).json({ msg: "Carrito no Existe" });
-    res.render("carts", { products : cart.products });
+    const productList = cart.products.map(p =>{
+      return { 
+      title: p.product.title,
+      description: p.product.description,
+      price: p.product.price,
+      quantity: p.quantity
+      }
+    })
+    console.log(productList)
+    res.render("carts",  {productList});
   } catch (error) {
     console.log(error);
   }
 });
 
-viewsRouter.get(`/orders`, (req, res) => {
-  res.render(`orders`);
+viewsRouter.get(`/ticket`, (req, res) => {
+  res.render(`tickets`);
 });
+
+viewsRouter.post(`/ticket`, (req,res) =>{
+  
+})
+
+
 viewsRouter.get(`/contacto`, (req, res) => {
   res.render(`contactos`);
 });

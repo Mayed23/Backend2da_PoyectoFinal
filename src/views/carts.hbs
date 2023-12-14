@@ -1,26 +1,24 @@
 <h1>Carrito</h1>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <img src="#" alt="">
-                <th>Producto</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <img src="#" alt="">
+            <th>Nombre </th>
+            <th>Descripción</th>
+            <th>Precio $</th>
+            <th>Cantidad</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {{#each productList}}
+            <tr>                    
+                <td>{{title}}</td>
+                <td>{{description}}</td>
+                <td>{{price}}</td>
+                <td>{{quantity}}</td>
             </tr>
-        </thead>
-        <tbody>
-             {{#each product}}
-                <tr>
-                    <td>Nombre: {{this.prodId.title}}</td>
-                    <td>Descripción: {{this.prodId.description}}</td>
-                    <td>Precio: ${{this.prodId.price}}</td>
-                    <td>Cantidad: {{this.quantity}}</td>
-                </tr>
-            {{/each}}
-
-        </tbody>
-    </table>
-
+        {{/each}}
+    </tbody>
+</table>

@@ -1,10 +1,9 @@
 <div class="cardDetail mt-5">
     <p>Nombre: {{this.title}}</p>
     <p>Descripción: {{this.description}}</p>
-    <p>Codigo: {{this.code}}</p>
-   
+    <p>Codigo: {{this.code}}</p>   
     <p>Precio: {{this.price}}</p>
-    <form action="/carts/{{cid}}/product/{{this.id}}" method="post">
+    <form action="/api/carts/{{this.cartId}}/product/{{this.id}}" method="post">
         <input type="submit" value="Comprar">
     </form>
 

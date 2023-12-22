@@ -15,11 +15,13 @@ const  MongoStore  = require (`connect-mongo`)
 const routerApp = require (`../src/routes/`)
 const { initializePassport } = require (`../src/config/passportJwt.js`)
 const {  configObject: {  port, connectDb, cookiekey }}= require("./config/confi.js")
-
+const errorHandleMidd = require("./middleware/error/indexError.js")
+const { addlogger, logger } = require("./utils/loggers.js")
 
 
 const app = express()
 const PORT = port || 8080
+
 
 
 connectDb()
@@ -86,10 +88,16 @@ app.use(cookieParser(cookiekey))
 // })) 
 
 
+
+app.use(addlogger)
 app.use(routerApp)
+
+//app.use(errorHandleMidd)
+
 
 
 const httpServer = app.listen(PORT, () => {
-    console.log(`Server listen on port ${PORT}`)
+    logger.info(`Server listen on port ${PORT}`)
+    
 })
 const socketServer = new Server(httpServer)

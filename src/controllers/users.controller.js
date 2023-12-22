@@ -1,5 +1,7 @@
 const UserDto = require("../Dto/user.dto.js")
 const { userService } = require("../routes/service/service.js")
+const {create} = require("../utils/errors/CustomError.js")
+const { logger } = require("../utils/loggers.js")
 
 class UserController{
     constructor(){
@@ -20,7 +22,7 @@ class UserController{
             payload: users
         })
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     } 
     
@@ -29,13 +31,13 @@ class UserController{
             
             let id = req.params.id 
             let user = await this.userService.getById(id)
-            console.log(user)
+            logger.info(user)
             res.send({
                 status: `success`,
                 payload: user
             })
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 
@@ -43,13 +45,13 @@ class UserController{
         try { 
             let email = req.params.email
             let user = await this.userService.getByEmail(email)
-            console.log(user)
+            logger.info(user)
             res.send({
                 status: `success`,
                 payload: user
             })
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 
@@ -58,14 +60,14 @@ class UserController{
         try{
             let { first_name, last_name, age, email, password, role } = new UserDto(newUser)
             
-            if( !first_name || !last_name || !age || !email || !password || !role) 
+            if( !first_name || !last_name || !age || !email || !password || !role) {
             res.send({ status: `error`, error: `Ingrese todos los campos`})
-            
+            }
             const user = await this.userService.create(newUser)
-            console.log(user)
+            logger.info(user)
             res.status(200).json(newUser)
         }catch (error) {
-            console.error('Error al agregar el usuario:', error);
+            logger.error('Error al agregar el usuario:', error);
             return 'Error al agregar el usuario';
         }
     }
@@ -76,8 +78,25 @@ class UserController{
             return `Su contraseña ha sido cambiada`
            
         }catch(error){
-            console.log(error)
+            logger.error(error)
         } 
+    }
+
+    changeRole = async (req, res) => {
+        const id = req.params.id
+        try{
+            const user = await userService.getById(id)
+            if(!user) res.status(404).json({
+                msg:`Usuario no encontrado`
+            });
+
+            await userService.changeRole(user.email);
+            const userUpdate = await userService.getById(id)
+            res.status(200).json({ status: " success", msg: "El rol se ha cambiado exitosamente", newRole: userUpdate.role})
+        }catch(error){
+            logger.error(error.message);
+            res.status(500). json({error: `Server internal error`})
+        }
     }
 
     updateUser = async (req, res) => {
@@ -85,7 +104,7 @@ class UserController{
         let updateUser = req.body
         try{
             await this.userService.update(id, updateUser)
-            console.log (updateUser)
+           logger.info(updateUser)
 
             const userOne = await this.userService.getById(id)
                 res.status(200).json({
@@ -104,7 +123,7 @@ class UserController{
                 msg: `Usuario Eliminado con Exito`, suprUser
             })
         }catch(error){
-            console.log(error)
+            logger.error(error)
         }
              
     }

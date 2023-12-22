@@ -154,23 +154,20 @@ Content-Type: application/json
 {
     "first_name": "prueba55",
     "last_name": "prueba55",
-    "age": 30,
     "email": "pp555@gmail.com",
-    "pasword": "123456",
-    "role": "user"
-   
+    
 }
 
 ###
-PUT http://localhost:8080/api/users/656f2cdea214b8ce91dce5b4
+POST  http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "first_name": "Luis",
-    "last_name": "García",
-    "age": 35,
-    "email": "lg@gmail.com",
-    "password": "$2b$10$8mm9.q5hKHpKcw1knHyngeRUuZyZRi5rFnvKWcPX/LQAA6lcRy8dO",
+    "first_name": "Loberto",
+    "last_name": "loberto",
+    "age": 32,
+    "email": "lolo@gmail.com",
+    "password": "22222",
     "role": "user"
 }
 
@@ -223,7 +220,7 @@ GET http://localhost:8080/api/carts
 
 
 ###
-GET http://localhost:8080/api/carts/652b091e08c04721038bafab
+GET http://localhost:8080/api/carts/657de54852f3027eb9b11334
 
 
 ###
@@ -249,8 +246,7 @@ Content-Type: application/json
 GET  http://localhost:8080/api/carts/657636688306ec8b4d3d9174
 
 ###
-GET  http://localhost:8080/api/products/653587e0e538b6178ac5a6d4
-
+GET  http://localhost:8080/api/products
 
 ###
 POST  http://localhost:8080/api/carts/65763aa40f4409a9a6f5906f/product/653587e0e538b6178ac5a6d4
@@ -282,16 +278,37 @@ Content-Type: application/json
     "description": "Este es un producto de prueba",
     "thumbnail": "fd",
     "status": true,
-    "stock": 0,
+    "stock": 2,
     "code": "123956",
     "category": "Prueba",
     "__v": 0
 }
 
 ###
-GET  http://localhost:8080/api/carts/65763aa40f4409a9a6f5906f
+GET  http://localhost:8080/api/users/657098e9041780efd0a6b9f9
+
 
 ###
-POST  http://localhost:8080/api/order/
+GET   http://localhost:8080/api/carts/6584ded9cf110cb519f5b426
+
+###
+DELETE http://localhost:8080/api/carts/6584ded9cf110cb519f5b426
+
+//user Mocks//
+
+###
+GET  http://localhost:8080/pruebas/users
+
+
+
+
+
+///monkProducts
+###
+POST http://localhost:8080/api/products/monkingproducts
+
+
+###
+GET http://localhost:8080/pruebas/sencilla
 
 

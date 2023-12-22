@@ -7,6 +7,7 @@ const {
     createCarts,
     getCarts,
     getCartsById,
+    getCartByUsers,
     deleteCarts,
     createProductToCarts,
     createProductInUserCart,
@@ -18,6 +19,7 @@ const {
 CartsRouter.post("/",createCarts)
 CartsRouter.get("/", getCarts)
 CartsRouter.get("/:id", getCartsById)
+CartsRouter.get("/:uid", getCartByUsers)
 CartsRouter.delete("/:id", deleteCarts )
 CartsRouter.post("/product/:pid", createProductToCarts)
 CartsRouter.post("/:cid/product/:pid", createProductToCarts)

@@ -9,7 +9,8 @@ const {
     getUserByEmail,
     createUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    changeRole,
 } = new UserController()
 
 
@@ -19,6 +20,7 @@ userRouter.get(`/email/:email`, getUserByEmail)
 userRouter.post(`/`, createUser)
 userRouter.put(`/:id`, updateUser)
 userRouter.delete(`/:id`, deleteUser)
+userRouter.get(`/premium/:id`, changeRole)
 
 
 

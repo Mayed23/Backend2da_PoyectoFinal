@@ -26,13 +26,13 @@
     <div>
          <center>
         {{#if hasPrevPage}}
-            <a href="/products?numPage={{prevPage}}"><button>Anterior</button></a>
+            <a href="/products?numPage={{prevLink}}"><button>Anterior</button></a>
         {{/if}}
 
         <label >{{page}}</label>
       
         {{#if hasNextPage}}
-            <a href="/products?numPage={{nextPage}}"><button>Siguiente</button></a>
+            <a href="/products?numPage={{nextLink}}"><button>Siguiente</button></a>
         {{/if}}
         </center>
     </div>

@@ -4,6 +4,7 @@ const GitHubStrategy = require (`passport-github2`)
 const local = require(`passport-local`)
 const { createHash, isValidPass } = require(`../utils/hash.js`)
 const { userService } = require("../routes/service/service.js")
+const { logger } = require("../utils/loggers.js")
 
 
 
@@ -18,10 +19,10 @@ const initializePassport = () => {
     //Extraer el token de  la cookie
     const cookieExtrator = req => {
         let token = null 
-            //console.log(`cookie extractor:`. req.cookie)
+            //logger.info(`cookie extractor:`. req.cookie)
         if (req && req.cookies) {
             token = req.cookies[`cookieToken`]
-                console.log(`token extraxtros:`, token)
+                logger.info(`token extraxtros:`, token)
         }
         return token
     }
@@ -45,7 +46,7 @@ const initializePassport = () => {
           try{
             let user = await userService.getByEmail(username)
             if (user) {
-              console.log(`Usuario ya existe`)
+              logger.info(`Usuario ya existe`)
               return done (null,false)
             }
             const newUser = {
@@ -68,7 +69,7 @@ const initializePassport = () => {
         try{
           const user = await userService.getByEmail(username)
           if (!user){
-            console.log(`EL usuario no Existe`)
+            logger.info(`EL usuario no Existe`)
             return( null, false)
           }
           if(!isValidPass(user, password)) return done (null, false)
@@ -88,7 +89,7 @@ const initializePassport = () => {
         //console.log(`profile:`, profile)
         try{
         const user = await userService.getByEmail(profile._json.email)
-        console.log(user)
+        logger.info(user)
         if(!user){
             const email = profile._json.email 
             const newUser = {

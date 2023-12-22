@@ -1,8 +1,8 @@
-//const { sendEmail } = require("../../utils/sendOrderEmail.js");
+const { logger } = require("../../utils/loggers.js");
+const sendEmail = require("../../utils/sendEmail.js");
 const cart  =  require(`./models/carts.model.js`); 
 const product  = require(`./models/products.model.js`); 
 const ticket = require("./models/ticket.model.js");
-
 
 
 module.exports = class CartsDaoMongo {
@@ -19,11 +19,16 @@ module.exports = class CartsDaoMongo {
     };
 
     getByUser = async (userId) => {
+     
+
       const cart =  await this.model.cart.find({userId})
-      if(cart == undefined){
+
+      if(cart.length == 0){
+
         return this.model.cart.create({userId})
       }
-      return cart[0]
+      
+      return (cart[0])
     }
     
     create = async () => {
@@ -35,6 +40,7 @@ module.exports = class CartsDaoMongo {
     };
   
     delete = async (id) => {
+      
       return await this.model.cart.deleteOne({ _id: id });
 
     };  
@@ -59,7 +65,7 @@ module.exports = class CartsDaoMongo {
         }else{
           existingCart = await this.model.cart.findById(cartId);
         }
-        console.log("Este es el resultado de Model cart", existingCart)
+        logger.info("Este es el resultado de Model cart", existingCart)
         if (existingCart == {}) {
           
           return {
@@ -70,14 +76,14 @@ module.exports = class CartsDaoMongo {
           };
         }
         
-        console.log('Cart antes de Agregar productos' , existingCart.products)
+        logger.info('Cart antes de Agregar productos' , existingCart.products)
         
         // Verificar si el producto ya está en el carrito
         const productInCart = existingCart.products.find(p => p.product._id.toString() === existingProduct._id.toString());
     
-        console.log('Product In Cart',productInCart)
+        logger.info('Product In Cart',productInCart)
         if (productInCart === undefined) {
-          console.log('******* No Existe Producto en el Carrito *****');
+          logger.info('******* No Existe Producto en el Carrito *****');
           
 
           // Si el producto  está en el carrito, verificar si hay suficiente stock
@@ -90,7 +96,7 @@ module.exports = class CartsDaoMongo {
             };
           }
     
-          console.log('Crear Producto en el Carrito');
+          logger.info('Crear Producto en el Carrito');
           existingCart.products.push({
             product: existingProduct._id,
             quantity: 1
@@ -98,7 +104,7 @@ module.exports = class CartsDaoMongo {
 
         } else {
           // Si el producto ya está en el carrito, verificar si hay suficiente stock para aumentar la cantidad
-          console.log('========== Si Existe Producto en el Carrito ========');
+          logger.info('========== Si Existe Producto en el Carrito ========');
           
             if (existingProduct.stock < (productInCart.quantity + 1)) {
               return {
@@ -109,7 +115,7 @@ module.exports = class CartsDaoMongo {
               };
             }
     
-          console.log('Actualizar Cantidad del Producto en el Carrito');
+            logger.info('Actualizar Cantidad del Producto en el Carrito');
           productInCart.quantity += 1;
         }
 
@@ -120,7 +126,7 @@ module.exports = class CartsDaoMongo {
     
         return existingCart;
       }catch (error) {
-        console.error(error);
+        logger.error(error);
         throw error;
       }
     };
@@ -136,16 +142,18 @@ module.exports = class CartsDaoMongo {
             msg: 'Cart no existe'
           }
         }
-        const productsCart = existingCart.products.filter(p => p.product._id.toStri() !== prodId)
+        const productsCart = existingCart.products.filter(p => p.product._id.toString() !== prodId)
   
        existingCart.products = productsCart
+
+       
   
         await existingCart.save()
   
         return existingCart
   
       } catch (error) {
-        console.log(error);
+        logger.error(error);
         return error;
       }
   
@@ -183,7 +191,7 @@ module.exports = class CartsDaoMongo {
         return acc + productEntry.product.price * productEntry.quantity;
       }, 0);
     
-      const order = await this.model.orden.create({
+      const order = await this.model.ticket.create({
         purchase: user.email,
         product: productsInStock,
         amount: total,
@@ -193,7 +201,7 @@ module.exports = class CartsDaoMongo {
       await this.sumaTotal(cartId);
     
       // Enviar correo electrónico de confirmación de pedido
-      sendOrderEmail(order);
+      sendEmail(order);
     
       return order;
     };

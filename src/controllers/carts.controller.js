@@ -1,5 +1,5 @@
 const { cartService, productService, userService } = require("../routes/service/service.js");
-
+const { logger } = require("../utils/loggers.js");
 
 
 class CartsController{
@@ -27,7 +27,7 @@ class CartsController{
                 payload: carts
              })   
         }catch(error){
-            console.log(error)
+            logger.error(error)
         }
        
     }
@@ -43,26 +43,81 @@ class CartsController{
                 payload: cartId
             }) 
         }catch(error){
-            console.log(error)
+          logger.error(error)
         }
     }
 
-   
-    deleteCarts = async (req, res) => {
-        let {id} = req.params
-        try {
-            const cartId = await this.cartService.getById(id);
-            if (!cartId) {
-              return "Carrito no encontrado";
-            }
-            await cartService.delete({ _id: id });
-            res.status(200).json({
-                msg: `Se ha eliminado correctamente Cart : ${id}`
+    getCartByUsers =  async (req, res) => {
+    
+      try{
+          let uid = req.params.id
+          let cartId = await this.cartService.getByUser(uid)
+          if(!cartId) res.status(404).json({ message: `Carrito no encontrado`})
+              res.send({
+              status: `success`,
+              payload: cartId
+          }) 
+      }catch(error){
+        logger.error(error)
+      }
+  }
+  deleteCarts = async (req, res) => {
+    let { id } = req.params;
+    try {
+        // Obtener el carrito antes de eliminarlo
+        const cart = await this.cartService.getById(id);
+
+        if (!cart) {
+            return res.status(404).json({
+                error: "Carrito no encontrado"
             });
-          } catch (error) {
-            return error;
-          } 
+        }
+
+        // Eliminar el carrito
+        await this.cartService.delete({ _id: id });
+
+        // Devolver productos al inventario
+        for (const product of cart.products) {
+            const productId = product.id;
+            const productInInventory = await productService.getById(productId)
+
+
+            if (productInInventory) {
+                // Incrementar el stock en el inventario
+                await productService.update(
+                    { _id: productId },
+                    { stock: productInInventory.stock + product.quantity }
+                );
+            }
+        }
+
+        return res.status(200).json({
+            msg: `Se ha eliminado correctamente el carrito y se ha devuelto el stock al inventario`
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            error: "Error interno del servidor"
+        });
     }
+}
+
+
+    // deleteCarts = async (req, res) => {
+    //     let {id} = req.params
+    //     try {
+    //         const cartId = await this.cartService.getById(id);
+    //         if (!cartId) {
+    //           return "Carrito no encontrado";
+    //         }
+    //         await cartService.delete({ _id: id });
+    //         res.status(200).json({
+    //             msg: `Se ha eliminado correctamente Cart : ${id}`
+    //         });
+    //       } catch (error) {
+    //         return error;
+    //       } 
+    // }
 
     
 
@@ -77,10 +132,10 @@ class CartsController{
             throw new Error(result.error.msg);
           }
 
-          console.log(result);
+          logger.info(result);
           res.json({ message: 'Producto agregado al carrito', cart: result});
         } catch (error) {
-          console.error(error);
+          logger.error(error);
           res.status(500).send(error.message);
         }
       };
@@ -107,7 +162,7 @@ class CartsController{
           message: `Producto agregado al carrito`, products: result.cart.products 
           });
         } catch (error) {
-          console.error(error);
+          logger.error(error);
           res.status(500).send(error.message);
         }
       };
@@ -122,7 +177,7 @@ class CartsController{
             res.status(200).json({
             msg: `Carrito Eliminado con Exito`, deleteCart})
         }catch(error){
-            console.log(error)
+          logger.error(error)
         }
         
     }
@@ -139,7 +194,7 @@ class CartsController{
 
             res.status(200).json({ message: `Compra realizada`, result})
         }catch(error){
-            console.log(error)
+          logger.error(error)
             res.status(500).send(error.message)
         }
     }

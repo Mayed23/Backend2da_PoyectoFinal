@@ -1,4 +1,10 @@
 const { productService } = require("../routes/service/service");
+const { CustomError } = require("../utils/errors/CustomError");
+const { EErrors } = require("../utils/errors/enums");
+const { generateErrorInfo } = require("../utils/errors/info");
+const { generateProducts } = require("../utils/generateProducts");
+
+
 
 
 class ProductsController{
@@ -35,11 +41,13 @@ class ProductsController{
                 nextPage,
                 page: products.page,
                 hasPrevPage,
-                hasNextPage
+                hasNextPage,
+                prevLink: `http://localhost:8080/products?page=${prevPage}`,
+                nextLink: `http://localhost:8080/products?page=${nextPage}`,
             
            })
         }catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
 
@@ -53,7 +61,7 @@ class ProductsController{
                 payload: productId
             })
         } catch(error){
-            console.log(error)
+            logger.error(error)
         }
     
     }
@@ -71,7 +79,7 @@ class ProductsController{
             
             res.status(200).json(prodNew)
         }catch(error){
-            console.error('Error al agregar producto:', error);
+            logger.error('Error al agregar producto:', error);
             return 'Error al agregar el producto';
         }   
     }
@@ -81,13 +89,13 @@ class ProductsController{
         let updateProd = req.body
         try{
             await this.productService.update(id, updateProd)
-            console.log(updateProd)
+            logger.info(updateProd)
            
             const prodOne = await this.productService.getById(id)
                 res.status(200).json({
                 msg: `Producto Actualizado`, prodOne
             })
-            console.log(prodOne)
+            logger.error(prodOne)
         }catch(error){
             return `Cambios no realizados`
         }
@@ -101,9 +109,29 @@ class ProductsController{
             msg: `Producto Eliminado con Exito`, deleteProd})
                         
         } catch(error){
-            console.log(error)
+            logger.error(error)
         }
         
+    }
+
+    getMonckingProducts = async (req, res, next) => {
+        
+        try{
+            const prodMonk = generateProducts()
+             if (prodMonk.length > 1) 
+                CustomError({
+                name: `Error mock`, 
+                message:  `Error al generar productos Mock`, 
+                cause: generateErrorInfo({prodMonk}), 
+                code: EErrors.PRODUCT_NOT_FOUND
+                })
+            
+            
+            res.status(200).json(prodMonk);
+        }catch(error){
+            next(error)
+            res.status(500).json({msg: `Error en el Servidor`})
+        }
     }
 }
 

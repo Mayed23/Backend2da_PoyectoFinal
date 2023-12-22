@@ -8,7 +8,7 @@ let UserDao
 let ProductDao
 let CartDao
 
-console.log(persistence)
+logger.info(persistence)
 
 switch (persistence) {
     case "MONGO": 

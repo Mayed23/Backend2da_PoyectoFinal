@@ -19,7 +19,7 @@ class TicketController {
             res.status(201).json(ticket)
 
         }catch(error){
-            console.log(error)
+            logger.error(error)
         }
     }
     getTicketFromEmail = async (req, res) => {
@@ -29,7 +29,7 @@ class TicketController {
 
             res.status(200).json(ticket)
         }catch(error){
-            console.log(error)
+            logger.error(error)
         }
 
     }

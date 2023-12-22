@@ -1,4 +1,5 @@
 const mongoose  = require("mongoose");
+const { logger } = require("./loggers");
 
 
 class MongoSingleton {
@@ -13,11 +14,11 @@ class MongoSingleton {
     }
     static getInstance(mongo_url){
         if(this.#instance){
-            console.log(msg`Base de dato ya creada`)
+            logger.info(msg`Base de dato ya creada`)
             return this.#instance
         }
         this.#instance = new MongoSingleton(mongo_url)
-        console.log(`Base de datos CONECTADA`)
+        logger.info(`Base de datos CONECTADA`)
         this.#instance
     }
 }

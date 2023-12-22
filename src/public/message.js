@@ -43,7 +43,7 @@ try{
             user:usuario,
             message:inputmensaje.value
         }
-        console.log(info)
+        lo(info)
         socketClient.emit("mensaje",info)
         inputmensaje.value=" "
 

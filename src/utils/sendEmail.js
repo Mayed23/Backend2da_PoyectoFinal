@@ -1,5 +1,6 @@
 const nodemailer = require (`nodemailer`)
-const { configObject : { nodemailer_user, nodemailer_password} } = require (`../config/confi.js`)
+const { configObject : { nodemailer_user, nodemailer_password} } = require (`../config/confi.js`);
+const { logger } = require("./loggers.js");
 
 
 const transporter = nodemailer.createTransport({
@@ -43,10 +44,10 @@ const sendEmail = (ticket) => {
 
 transporter.sendMail(mailOptions, function (error, info) {
   if (error) {
-    console.log("Error in sending email  " + error);
+    logger.error("Error in sending email  " + error);
     return true;
   } else {
-   console.log("Email sent: " + info.response);
+   logger.info("Email sent: " + info.response);
    return false;
   }
  });

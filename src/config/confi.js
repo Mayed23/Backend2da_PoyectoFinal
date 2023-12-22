@@ -5,7 +5,7 @@ const MongoSingleton = require("../utils/MongoSingleton")
 
 const { mode } = program.opts()
 
-console.log(mode)
+
 
 dotenv.config({
     path: mode === `development` ? `./.env.development` : `./.env.production`
@@ -32,11 +32,11 @@ const configObject = {
 
 // const connectDb = async () => {
 //     try {
-//         console.log(`Base de Datos conectada`)
+//         logger.info(`Base de Datos conectada`)
 //         return await connect(process.env.MONGO_URL)
 
 //     } catch (error) {
-//         console.log(error)
+//         logger.error(error)
 //     }
 
 // }

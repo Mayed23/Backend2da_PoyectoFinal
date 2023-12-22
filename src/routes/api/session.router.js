@@ -44,7 +44,7 @@ sessionsRouter.get(`/logout`, async (req, res) =>{
             res.json({ msg: `Sesión cerrada con éxito`})
         })
     }catch(error){
-        console.log(error)
+      logger.error(error)
     }
         
 })

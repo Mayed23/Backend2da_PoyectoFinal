@@ -1,3 +1,5 @@
+const { logger } = require("../utils/loggers")
+
 exports.authorization = (role)=> {
     return async (req, res, next) => {
         console.log(`role:`, role)
@@ -13,7 +15,7 @@ exports.authorization = (role)=> {
                 return res.status(401).send({status: `error`, error: `Not Permissions`})
             }    
         }catch(error){
-            console.log(error)
+            logger.error(error)
 
         }
     }

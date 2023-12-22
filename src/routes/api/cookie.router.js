@@ -11,7 +11,7 @@ cookiesRouter.get(`/cookies`, (req, res) => {
 
 cookiesRouter.get(`/getcookies`, (req, res) => {
 
-    console.log(req.cookies)
+    logger.info(req.cookies)
     res.send(`get cookies`)
 })
 

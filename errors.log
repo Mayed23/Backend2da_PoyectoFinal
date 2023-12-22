@@ -1,0 +1,53 @@
+{"level":"warn","message":"warning ojo"}
+{"level":"warn","message":"warning en la ruta de pruebas"}
+{"level":"warn","message":"warning en la ruta de pruebas"}
+warning: warning en la ruta de pruebas
+warning: warning en la ruta de pruebas
+warning: warning en la ruta de pruebas
+fatal: warning en la ruta de pruebas
+fatal: warning en la ruta de pruebas
+error: warning en la ruta de pruebas
+fatal: warning en la ruta de pruebas
+error: undefined {"cause":"one or more properties were incomplete or not valid.\n    List of require properties:\n    * title nedds to be a string, recived undefined\n    * description: nedds to be a string, recived undefined\n    * price: nedds to be a string, recived undefined","code":4,"name":"Error mock"}
+error: undefined
+error: undefined
+error: undefined
+error: undefined {"kind":"string","path":"email","reason":null,"stringValue":"\"Session {\n  cookie: { path: '/', _expires: null, originalMaxAge: null, httpOnly: true }\n}\"","value":{"cookie":{"expires":null,"httpOnly":true,"originalMaxAge":null,"path":"/"}},"valueType":"Session"}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"6583438f5646b477\"","value":"6583438f5646b477","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"6583438f5646b477\"","value":"6583438f5646b477","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"6583438f5646b477\"","value":"6583438f5646b477","valueType":"string"}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined {"code":"ERR_HTTP_HEADERS_SENT"}
+error: undefined
+error: undefined
+error: userService.changeRole is not a function

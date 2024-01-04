@@ -1,3 +1,39 @@
+ <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .cardDetail {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .cardDetail p {
+            margin-bottom: 10px;
+        }
+
+        form {
+            text-align: center;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
 <div class="cardDetail mt-5">
     <p>Nombre: {{this.title}}</p>
     <p>Descripción: {{this.description}}</p>

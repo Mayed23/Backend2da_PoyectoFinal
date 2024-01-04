@@ -1,8 +1,9 @@
-const { productService } = require("../routes/service/service");
+const { productService } = require("../service/service.js");
 const { CustomError } = require("../utils/errors/CustomError");
 const { EErrors } = require("../utils/errors/enums");
 const { generateErrorInfo } = require("../utils/errors/info");
 const { generateProducts } = require("../utils/generateProducts");
+const { logger } = require("../utils/loggers.js");
 
 
 
@@ -42,8 +43,8 @@ class ProductsController{
                 page: products.page,
                 hasPrevPage,
                 hasNextPage,
-                prevLink: `http://localhost:8080/products?page=${prevPage}`,
-                nextLink: `http://localhost:8080/products?page=${nextPage}`,
+                prevLink: 'http://localhost:8080/products?page=${prevPage}',
+                nextLink: 'http://localhost:8080/products?page=${nextPage}',
             
            })
         }catch (error) {
@@ -55,9 +56,9 @@ class ProductsController{
         try{
             let id = req.params.id
             let productId = await this.productService.getById(id)
-            if(!productId) return `producto no encontrado`
+            if(!productId) return 'producto no encontrado'
             res.send({
-                status: `success`,
+                status: 'success',
                 payload: productId
             })
         } catch(error){
@@ -67,22 +68,25 @@ class ProductsController{
     }
 
     createProducts = async (req, res) => {
-        const newProduct= req.body
-        try{        
-            let { title, price, description, thumbnail, status, stock, code, category } = newProduct
-       
-            if( !title || !price || !description || !thumbnail || !status || !stock || !code || !category)
-            
-            res.send({ status: `error`, error: `Ingrese todos los campos`})
-            
-            const prodNew = await this.productService.create(newProduct)
-            
-            res.status(200).json(prodNew)
-        }catch(error){
-            logger.error('Error al agregar producto:', error);
-            return 'Error al agregar el producto';
-        }   
-    }
+
+    const newProduct= req.body
+    try{        
+        let { title, price, description, thumbnail, status, stock, code, category, owner } = newProduct
+   
+        if( !title || !price || !description || !thumbnail || !status || !stock || !code || !category || !owner){
+        
+        res.send({ status: 'error', error: 'Ingrese todos los campos'})
+        }
+        const prodNew = await this.productService.create(newProduct)
+        res.status(200).json({ status: 'error', error: 'Ingrese todos los campos'})
+        
+        res.status(200).json(prodNew)
+    }catch(error){
+        logger.error('Error al agregar producto:', error);
+        return 'Error al agregar el producto';
+    }   
+}
+
 
     updateProduct = async (req, res) =>{
         let id = req.params.id
@@ -93,11 +97,11 @@ class ProductsController{
            
             const prodOne = await this.productService.getById(id)
                 res.status(200).json({
-                msg: `Producto Actualizado`, prodOne
+                msg: 'Producto Actualizado', prodOne
             })
             logger.error(prodOne)
         }catch(error){
-            return `Cambios no realizados`
+            return 'Cambios no realizados'
         }
     }
 
@@ -106,7 +110,7 @@ class ProductsController{
         try{
            const deleteProd = await this.productService.delete({_id: id})
             res.status(200).json({
-            msg: `Producto Eliminado con Exito`, deleteProd})
+            msg: 'Producto Eliminado con Exito', deleteProd})
                         
         } catch(error){
             logger.error(error)
@@ -120,8 +124,8 @@ class ProductsController{
             const prodMonk = generateProducts()
              if (prodMonk.length > 1) 
                 CustomError({
-                name: `Error mock`, 
-                message:  `Error al generar productos Mock`, 
+                name: 'Error mock', 
+                message:  'Error al generar productos Mock', 
                 cause: generateErrorInfo({prodMonk}), 
                 code: EErrors.PRODUCT_NOT_FOUND
                 })
@@ -130,10 +134,9 @@ class ProductsController{
             res.status(200).json(prodMonk);
         }catch(error){
             next(error)
-            res.status(500).json({msg: `Error en el Servidor`})
+            res.status(500).json({msg: 'Error en el Servidor'})
         }
     }
 }
 
 module.exports = ProductsController
-

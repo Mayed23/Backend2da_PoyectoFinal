@@ -1,7 +1,17 @@
 
-<div class="continer">
-    <h1>Usuario Perfil</h1>
-    <p>nombre: {{first_name}} {{last_name}}</p>
-    <p>Email: {{email}}</p>
-    <p>Edad: {{age}}</p>
+<div class="container">
+    <h1>Perfil del Usuario</h1>
+
+   {{#with user}}
+        <p>Nombre: {{user.first_name}} {{user.last_name}}</p>
+        <p>Email: {{user.email}}</p>
+        <p>Edad: {{user.age}}</p>
+        <p>Rol: {{user.role}}</p>
+    {{/with}}
+
+      <form action="/logout" method="get">
+    <input type="submit" class="btn btn-primary" value="Cierre de Sesion" />
+  </form>
 </div>
+</div>
+

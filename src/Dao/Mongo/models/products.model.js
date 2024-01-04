@@ -34,6 +34,10 @@ const productSchema = new Schema({
     },   
     category: {
         type: String
+    },
+    owner: {
+        type: String,
+        default: 'admin'
     }
     
 })

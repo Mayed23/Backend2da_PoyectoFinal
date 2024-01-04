@@ -10,10 +10,18 @@ const {
     cartService, 
     productService, 
     ticketService 
-} = require("../routes/service/service");
+} = require("../service/service.js");
 const { logger } = require("../utils/loggers");
+const sendlinkEmail = require("../utils/sendEmail");
+const passport = require("passport");
 
 
+
+
+
+const vistaInicio = async(req, res) => {
+  res.render(`products`)
+}
 
 const login = async (req, res) => {
     res.render(`login`, {
@@ -47,7 +55,8 @@ const loginUser = async (req, res) => {
     const token = generateToken({
       first_name: user.first_name,
       last_name: user.last_name,
-      email: user.email,  
+      email: user.email, 
+      age: user.age, 
       role: user.role,
     });
      const destiny = (user.role == `admin`)? `/users` : `/products`
@@ -61,8 +70,8 @@ const loginUser = async (req, res) => {
     // .status(200).send({
     //     status: `success`,
     //     token: token,
-    //     message: `loggen successfully`
-    // })
+    //     message: `loggen successfully`})
+     
 }
 
 const vistaRegister = async (req, res) => {
@@ -70,7 +79,7 @@ const vistaRegister = async (req, res) => {
       res.render(`register`);
     } catch (error) {
       logger.error(error);
-    }
+    }checkToken
 }
 
 const newRegister = async (req, res) => {
@@ -100,16 +109,32 @@ const newRegister = async (req, res) => {
 }
 
 const perfilUser = async (req, res) => {
-    try {
-      const user = verifyToken(req.cookies);
-      if (!user) return res.redirect(`/login`);
-      res.render(`profile`, user);
-    } catch (error) {
-      logger.error(error);
-    }
+  try {
+    const token = req.cookies.cookieToken; // Obtener el token de la cookie llamada 'cookieToken'
+    
+    const user = verifyToken(token); // Verificar el token
+    
+    if (!user) return res.redirect(`/login`);
+    
+    res.render(`profile`, { user });
+  } catch (error) {
+    logger.error(error);
+  }
 }
 
-const logout = async (req, res) => {
+// const perfilUser = async (req, res) => {
+//     try {
+//       const user = verifyToken({req.cookies.token})
+
+//       console.log(user, `pppppp`)
+//       if (!user) return res.redirect(`/login`);
+//       res.render(`profile`, {user: req.user});
+//     } catch (error) {
+//       logger.error(error);
+//     }
+// }
+
+const logoutUser = async (req, res) => { 
     req.session.destroy((error) => {
       if (error) {
         return res.json({
@@ -134,7 +159,36 @@ const newSubirArch = (uploader.single(`file`), (req, res) => {
     res.send({ status: `success`, payload: `Archivo subido con Éxito` });
   })
 
-const changePassword = async (req, res) =>{
+  const viewResetPassword = async (req, res) => {
+    try {
+      res.render("resetPassword");
+    } catch (error) {
+      logger.error(error.message);
+      res.status(500).json({ error: "Server internal error" });
+    }
+  };
+  
+  const resetPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+      const user = await userService.getByEmail(email);
+  
+      if (!user) return res.render("resetPassword", { error: `El usuario con el mail ${email} no existe` });
+  
+      // Generamos nuevo token que expira en 1hs
+      const token = generateToken({ email }, "1h");
+  
+      // Enviamos el mail con el link para resetear la contraseña
+      sendlinkEmail(token, email);
+  
+      res.render("mailConfirm", { email });
+    } catch (error) {
+      logger.error(error.message);
+      res.status(500).json({ error: "Server internal error" });
+    }
+  };
+
+const viewsChangePassword = async (req, res) =>{
     try{
       res.render(`changePassword`)
     }catch(error){
@@ -142,13 +196,21 @@ const changePassword = async (req, res) =>{
     }
 }
 
-const resetPassword = async (req, res) => {
-    const { email, password } = req.body
+const changePassword = async (req, res) => {
+    const { email, password1, password2 } = req.body
       try{
+
+        if (password1 !== password2 ) 
+        return res.render(`changePassword`, { error: "Las contraseñas no coinciden"})
+
         const user = await userService.getByEmail(email)
-          if(!user) return res.render(`changePassword`, { error : `El ususario ${email} no existe`})
+          if(!user) 
+          return res.render(`changePassword`, { error : `El usuario ${email} no existe`})
+        
   
-        await userService.UpdatePassword(email,createHash(password))
+        await userService.UpdatePassword(email,createHash(password1))
+        res.render("changePasswordConfirm", { msg: "Contraseña cambiada con éxito" });
+
         logger.info(user)
         res.redirect(`/login`)
       }catch(error){
@@ -211,6 +273,7 @@ async (req, res) => {
   }
 })
 
+
 const productsAll = async (req, res) => {
     const { limit, page, sort, category, status } = req.query;
     try {
@@ -252,20 +315,21 @@ const productsAll = async (req, res) => {
 }
 
 const productDetail = async (req, res, ) => {
-    const prodId = req.params.id;
+    const prodId = req.params.pid;
     const token = req.cookies.cookieToken
     const dataToken = verifyToken(token)
-    const email = dataToken.user.email
+    const email = dataToken.email
     console.log(dataToken.user.email)
     try{
       let product = await productService.getById(prodId);
+      
       const user = await userService.getByEmail(email)
      
       let cart = await cartService.getByUser(user._id.toString())
       
       
       product.cartId = cart._id.toString()    
-      res.render("itemDetail", product);
+      res.render("itemDetail", product); 
     } catch (error) {
       logger.error(error);
     }
@@ -286,11 +350,16 @@ const cartDetail = async (req, res) => {
         }
       })
       logger.info(productList)
-      res.render("carts",  {productList});
+      res.render("carts",  {productList}).redirect(`/carts`);
+      
     } catch (error) {
       logger.error(error);
     }
   }
+
+  const cartVista = (req, res) => {
+    res.render(`/carts/:cid`);
+}
 
 
 module.exports = { 
@@ -300,15 +369,20 @@ module.exports = {
     vistaRegister,
     newRegister, 
     perfilUser, 
-    logout, 
+    logoutUser, 
     subirArch, 
     newSubirArch,
+    viewResetPassword,
+    resetPassword,
+    viewsChangePassword, 
     changePassword, 
-    resetPassword, 
     messageVista,
     message, 
     sendMessage, 
     userAll, 
     productsAll, 
     productDetail, 
-    cartDetail }
+    cartDetail,
+    cartVista,
+    vistaInicio
+    }

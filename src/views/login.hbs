@@ -1,14 +1,16 @@
 <div class="container margin-rigth-30">   
     <div class="col-md-6 ">
         <h1>Login</h1>
-        <form   action="/login" method="POST">    
+        <form action="/login" method="POST">    
             <label for="email" class=" form-label">E-mail:</label>
             <input type="text" name="email" class="form-control" id="inputEmail3" placeholder="Ingrese el E-mail">
             <label for="password" class="form-label">Clave:</label>
             <input type="text" name="password" class="form-control" id="inputPassword3" placeholder="Ingrese el Pasword">
+            <br>
             <button type="submit" class="btn btn-primary ">Ingresar</button>
         </form>
             <div class="btn margin-top-10">
+
                 <a href="/api/sessions/github">
                     <button class="btn btn-dark">GitHup</button>
                 </a>
@@ -18,12 +20,16 @@
             <p>{{error}}</p>
             {{/if}}
 
-    <p>Restaurar contraseña <span><a href="/changePassword">Aquí</a></span></p>
+    <p>Restaurar contraseña <span><a href="/resetPassword">Aquí</a></span></p>
     
 
     <p>¿No tienes cuenta?</p>
     <br>
-    <a href="/register">Registro</a>
+            <div class="btn margin-top-10">
+                <a href="/register">
+                    <button class="btn btn-dark">Registro</button>
+                </a>
+            </div>
 
     </div>
 </div> 

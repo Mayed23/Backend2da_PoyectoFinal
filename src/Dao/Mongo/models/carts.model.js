@@ -23,7 +23,7 @@ const cartSchema = new Schema({
     }
   });
   
-  cartSchema.pre(/^find/, function (next) {
+  cartSchema.pre("find", function (next) {
     this.populate("products.product");
     next();
   });

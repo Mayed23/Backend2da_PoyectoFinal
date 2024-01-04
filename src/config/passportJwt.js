@@ -3,7 +3,7 @@ const pjwt = require (`passport-jwt`)
 const GitHubStrategy = require (`passport-github2`)
 const local = require(`passport-local`)
 const { createHash, isValidPass } = require(`../utils/hash.js`)
-const { userService } = require("../routes/service/service.js")
+const { userService } = require("../service/service.js")
 const { logger } = require("../utils/loggers.js")
 
 
@@ -79,6 +79,7 @@ const initializePassport = () => {
           return done(`Error, datos incorrectos` + error )
         }
     }))
+    
     
 
     passport.use(`github`, new GitHubStrategy({

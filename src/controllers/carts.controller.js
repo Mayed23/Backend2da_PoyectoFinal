@@ -1,4 +1,5 @@
-const { cartService, productService, userService } = require("../routes/service/service.js");
+const cart = require("../Dao/Mongo/models/carts.model.js");
+const { cartService, productService, userService } = require("../service/service.js");
 const { logger } = require("../utils/loggers.js");
 
 
@@ -13,7 +14,7 @@ class CartsController{
         const cart = await this.cartService.create(cartNew)
         res.status(200).json(cart)
     }catch(error){
-        console.error('Error al crear el carrito de compras:', error);
+        logger.error('Error al crear el carrito de compras:', error);
         return 'Error al crear el carrito de compras';
     }
 
@@ -27,7 +28,7 @@ class CartsController{
                 payload: carts
              })   
         }catch(error){
-            logger.error(error)
+            logger.error(error.message)
         }
        
     }
@@ -48,10 +49,11 @@ class CartsController{
     }
 
     getCartByUsers =  async (req, res) => {
-    
-      try{
-          let uid = req.params.id
-          let cartId = await this.cartService.getByUser(uid)
+
+    try{
+      let uid = req.params.id;
+      let cartId = await this.cartService.getByUser(uid)
+         
           if(!cartId) res.status(404).json({ message: `Carrito no encontrado`})
               res.send({
               status: `success`,
@@ -61,63 +63,22 @@ class CartsController{
         logger.error(error)
       }
   }
-  deleteCarts = async (req, res) => {
-    let { id } = req.params;
-    try {
-        // Obtener el carrito antes de eliminarlo
-        const cart = await this.cartService.getById(id);
-
-        if (!cart) {
-            return res.status(404).json({
-                error: "Carrito no encontrado"
-            });
-        }
-
-        // Eliminar el carrito
-        await this.cartService.delete({ _id: id });
-
-        // Devolver productos al inventario
-        for (const product of cart.products) {
-            const productId = product.id;
-            const productInInventory = await productService.getById(productId)
-
-
-            if (productInInventory) {
-                // Incrementar el stock en el inventario
-                await productService.update(
-                    { _id: productId },
-                    { stock: productInInventory.stock + product.quantity }
-                );
+  
+    deleteCarts = async (req, res) => {
+        let {id} = req.params
+        try {
+            const cartId = await this.cartService.getById(id);
+            if (!cartId) {
+              return "Carrito no encontrado";
             }
-        }
-
-        return res.status(200).json({
-            msg: `Se ha eliminado correctamente el carrito y se ha devuelto el stock al inventario`
-        });
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            error: "Error interno del servidor"
-        });
+            await cartService.delete({ _id: id });
+            res.status(200).json({
+                msg: `Se ha eliminado correctamente Cart : ${id}`
+            });
+          } catch (error) {
+            return error;
+          } 
     }
-}
-
-
-    // deleteCarts = async (req, res) => {
-    //     let {id} = req.params
-    //     try {
-    //         const cartId = await this.cartService.getById(id);
-    //         if (!cartId) {
-    //           return "Carrito no encontrado";
-    //         }
-    //         await cartService.delete({ _id: id });
-    //         res.status(200).json({
-    //             msg: `Se ha eliminado correctamente Cart : ${id}`
-    //         });
-    //       } catch (error) {
-    //         return error;
-    //       } 
-    // }
 
     
 
@@ -143,13 +104,15 @@ class CartsController{
       createProductInUserCart = async (req, res) => {
         try {
           const prodId = req.params.pid;
-          const user = req.session.user;
+          const user = req.session;
 
           if (!user.cart) {
             const newCart = await cartService.create();
             user.cart = newCart._id; 
             await userService.update(user._id, { cart: newCart._id });
           }
+
+          logger.info(newCart)
       
           
           const product = await productService.getById(prodId);
@@ -173,9 +136,26 @@ class CartsController{
         const carId = req.params.cid
         const prodId = req.params.pid
         try{
-            const deleteCart = await this.cartService.delete(carId, prodId)
-            res.status(200).json({
-            msg: `Carrito Eliminado con Exito`, deleteCart})
+          const cart = await this.cartService.getById(carId);
+          if(!cart) res.status(404).json({ 
+            message: `Carrito no encontrado`
+          });
+
+          const product = await productService.getById(prodId);
+          if (!product) return res.status(404).json({ 
+            message: `Producto no encontrado`
+          });
+          console.log(product)
+
+          const prodInCart = cart.products.filter((products) => products.product === prodId);
+          if(!prodInCart) return res.status(404).json({
+            message: "Producto no existe en carrito"
+          });
+          console.log(prodInCart)
+
+          await cartService.deleteProdToCart(carId.prodId)
+          res.status(200).json({
+            msg: `Producto eliminado del carrito`, prodInCart})
         }catch(error){
           logger.error(error)
         }
@@ -183,11 +163,12 @@ class CartsController{
     }
 
     purchaseCart = async (req, res) => {
-        const carId = req.params.id
-        const user =  req.session.user
+        const carId = req.params.cid;
+        const user =  req.session;
         
         try{
             const cart = await this.cartService.getById(carId);
+            console.log(`esto es `, cart)
             if(!cart) return res.status(404).json({message: `carrito no encontrado`})
 
             const result = await cartService.purchaseCart(carId, user)

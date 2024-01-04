@@ -1,11 +1,13 @@
+ 
 <div class="container" >
-    <h1>Productos</h1>
 
-    <div class="row row-cols-1 row-cols-md-2 g-2">
+    <h1 style="text-align: center">Productos</h1>
+    <br>
+    <div class="row row-cols-2 row-cols-md-3">
 
         {{#each products}}
         <div>
-            <div class="col">
+            <div>
                     <div class="card mb-2" >
                         <img src={{this.thumbnail}} class="card-img-top " alt="">
                             <div class="card-body" >

@@ -19,10 +19,8 @@ module.exports = class CartsDaoMongo {
     };
 
     getByUser = async (userId) => {
-     
 
-      const cart =  await this.model.cart.find({userId})
-
+      const cart =  await this.model.cart.find({userId}).lean()
       if(cart.length == 0){
 
         return this.model.cart.create({userId})
@@ -47,7 +45,8 @@ module.exports = class CartsDaoMongo {
   
 
     addProductToCart = async (cartId = 0, productId) => {
-      let existingCart = {}
+
+           let existingCart = {}
       try {
         // Verificar si el producto existe
         const existingProduct = await this.model.product.findById(productId);
@@ -136,7 +135,7 @@ module.exports = class CartsDaoMongo {
       try {
   
         const existingCart = await this.model.cart.findById(cartId)
-        if ( existingCart) return {
+        if (!existingCart) return {
           error: {
             status: 404,
             msg: 'Cart no existe'
@@ -145,12 +144,10 @@ module.exports = class CartsDaoMongo {
         const productsCart = existingCart.products.filter(p => p.product._id.toString() !== prodId)
   
        existingCart.products = productsCart
-
-       
+        
+       await existingCart.save()
   
-        await existingCart.save()
-  
-        return existingCart
+return existingCart
   
       } catch (error) {
         logger.error(error);
@@ -160,37 +157,44 @@ module.exports = class CartsDaoMongo {
     };
 
     purchaseCart = async (cartId, user) => {
-      const cart = await this.model.cart.findById(cartId);
-    
+
+      const cart = await this.getById(cartId);  
+
       let productsOutOfStock = [];
       let productsInStock = [];
     
-      for (const productEntry of cart.products) {
-        const product = productEntry.product;
-    
-        if (product.stock >= productEntry.quantity) {
+      for (const product of cart.products) {
+        
+        if (product.product.stock >= product.quantity) {
           productsInStock.push(product);
-    
-          // Realiza la acción necesaria si hay suficiente stock
-          await this.deleteProdToCart(cartId, product._id);
-          await this.model.product.findByIdAndUpdate(
-            product._id,
-            { $inc: { stock: -productEntry.quantity } }, // Utiliza $inc para decrementar el stock
-          );
+          
+          // Realiza la acción necesaria si no hay suficiente stock
+          await this.deleteProdToCart(cartId, product.product._id);
+
+          // Descontamos el Stock del productos
+
+          await this.model.product.updateOne(
+            product.product._id,{
+              stock: product.product.stock - product.quantity
+            });
+            await sumaTotal(cartId)
+         
         } else {
           productsOutOfStock.push(product);
         }
       }
+     
+      const total = productsInStock.reduce((acc, product) => {
+        return acc + product.product.price * product.quantity;
+      },0);
+
+      console.log(`el total es`, total)
     
       // Si no hay productos con suficiente stock, detén la compra
       if (productsInStock.length === 0) {
         return `No hay Stock suficiente para realizar su Compra`;
       }
-    
-      const total = productsInStock.reduce((acc, productEntry) => {
-        return acc + productEntry.product.price * productEntry.quantity;
-      }, 0);
-    
+      
       const order = await this.model.ticket.create({
         purchase: user.email,
         product: productsInStock,
@@ -201,7 +205,7 @@ module.exports = class CartsDaoMongo {
       await this.sumaTotal(cartId);
     
       // Enviar correo electrónico de confirmación de pedido
-      sendEmail(order);
+      // sendEmail(order);
     
       return order;
     };

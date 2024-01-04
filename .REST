@@ -1,5 +1,5 @@
 ###
-POST  http://localhost:8080/api/products
+POST   http://localhost:8080/api/products
 Content-Type: application/json
 
     {
@@ -11,7 +11,8 @@ Content-Type: application/json
         "status":"true",
         "stock":"15",
         "code": "9998",
-        "category": "1"            
+        "category": "1" ,
+        "owner":  "maiteesteves@gmail.com"          
             
     }      
        
@@ -26,8 +27,7 @@ GET   http://localhost:8080/api/products/652e90552274c45611fa49c3
  
 
 ###
-GET http://localhost:8080/api/carts/6564b56763606be91cdfc4ff
-
+GET http://localhost:8080/api/carts
 
 ###
 POST http://localhost:8080/api/carts
@@ -56,32 +56,40 @@ POST   http://localhost:8080/api/carts/652b091e08c04721038bafab/product/655e7f3b
 }
 
 ###
-GET  http://localhost:8080/api/users/6551190cb8a912e07a9c3894
-
-###
-GET  http://localhost:8080/api/carts
+GET  http://localhost:8080/api/users
 
 
 ###
-GET http://localhost:8080/api/carts/652b094008c04721038bafad
+POST  http://localhost:8080/api/carts
+
+
+
+//Buscar por ID del carrito funciona
+###
+GET http://localhost:8080/api/carts/658f57a5fe2aaaed1512ff57
+
+
+//Buscar por ID del Usuario 
+###
+GET http://localhost:8080/api/carts/659050a09ef695d83222d47f
+
+
+//crea producto en un carrito existente
 
 ###
-POST  http://localhost:8080/api/carts/652b094008c04721038bafad/product/6537e42c40d07e6a95d9195f
-
+POST http://localhost:8080/api/products
 Content-Type: application/json
 
-{
-   "_id": "6537e42c40d07e6a95d9195f",
-    "title": "Cambiado por luis3",
-    "price": 99.99,
-    "description": "Este es un producto de prueba",
-    "thumbnail": "fd",
+{   
+    "title": "Prueba de create",
+    "price": 15,
+    "description": "Prueba de create",
+    "thumbnail": "Prueba de create",
     "status": true,
-    "stock": 2,
-    "code": "123956",
-    "category": "Prueba",
-    "__v": 0,
-    "id": "6537e42c40d07e6a95d9195f"
+    "stock": 17,
+    "code": "1290",
+    "category": "1",
+    "owner": "maiteesteves@gmail.com"
 }    
 
 
@@ -131,8 +139,8 @@ POST  http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "first_name": "Jaime",
-    "last_name": "Lira",
+    "first_title": "Jaime",
+    "last_title": "Lira",
     "age": 26,
     "email": "jaimelira@gmail.com",
     "password": "123456",
@@ -152,8 +160,8 @@ POST    http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "first_name": "prueba55",
-    "last_name": "prueba55",
+    "first_title": "prueba55",
+    "last_title": "prueba55",
     "email": "pp555@gmail.com",
     
 }
@@ -163,8 +171,8 @@ POST  http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "first_name": "Loberto",
-    "last_name": "loberto",
+    "first_title": "Loberto",
+    "last_title": "loberto",
     "age": 32,
     "email": "lolo@gmail.com",
     "password": "22222",
@@ -220,7 +228,8 @@ GET http://localhost:8080/api/carts
 
 
 ###
-GET http://localhost:8080/api/carts/657de54852f3027eb9b11334
+DELETE  http://localhost:8080/api/carts/657ded410332adf27ea844f0
+
 
 
 ###
@@ -231,7 +240,7 @@ Content-Type: application/json
    "_id": "653587e0e538b6178ac5a6d4",
     "title": "Filtro de Gasolina",
     "price": 28,
-    "description": "Filtro para modelo Corsa",
+    "description": "Filtro para descriptiono Corsa",
     "thumbnail": "imag2",
     "status": true,
     "stock": 17,
@@ -256,7 +265,7 @@ Content-Type: application/json
    "_id": "653587e0e538b6178ac5a6d4",
     "title": "Filtro de Gasolina",
     "price": 28,
-    "description": "Filtro para modelo Corsa",
+    "description": "Filtro para descriptiono Corsa",
     "thumbnail": "imag2",
     "status": true,
     "stock": 17,
@@ -292,12 +301,11 @@ GET  http://localhost:8080/api/users/657098e9041780efd0a6b9f9
 GET   http://localhost:8080/api/carts/6584ded9cf110cb519f5b426
 
 ###
-DELETE http://localhost:8080/api/carts/6584ded9cf110cb519f5b426
-
+DELETE http://localhost:8080/api/carts/6658a274581897f07f82105f3
 //user Mocks//
 
 ###
-GET  http://localhost:8080/pruebas/users
+GET  http://localhost:8080/api/user/
 
 
 
@@ -312,3 +320,35 @@ POST http://localhost:8080/api/products/monkingproducts
 GET http://localhost:8080/pruebas/sencilla
 
 
+###
+GET  http://localhost:8080/api/products/6589c37b6547da413f6d4543
+Content-Type: application/json
+
+    {
+        "title": "Filtro de Gasolina",
+        "price": 22,
+        "description": "Lu-D-Max",
+        "thumbnail": "img9",
+        "status": "true",
+        "stock": "20",
+        "code": "1230",
+        "category": "2"
+            
+    }   
+
+
+###
+GET   http://localhost:8080/api/users/657c73c5bf6c289a8d60a4f0
+
+###
+DELETE   http://localhost:8080/api/carts/658a274581897f07f82105f3/product/6589bea26547da413f6d4539
+
+###
+DELETE   http://localhost:8080/api/carts/658a274581897f07f82105f3
+
+
+###
+GET   http://localhost:8080/api/sessions
+
+###
+GET  http://localhost:8080/changepassword

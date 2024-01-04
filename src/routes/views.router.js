@@ -6,10 +6,9 @@ const {
   vistaRegister,
   newRegister,
   perfilUser,
-  logout,
+  logoutUser,
   subirArch,
-  changePassword,
-  resetPassword,
+  viewsChangePassword,
   newSubirArch,
   messageVista,
   message,
@@ -18,6 +17,13 @@ const {
   productsAll,
   productDetail,
   cartDetail,
+  cartVista,
+  changePassword,
+  viewResetPassword,
+  resetPassword,
+  vistaInicio
+  
+  
    } = require("../controllers/views.controller.js");
 
 
@@ -30,20 +36,41 @@ viewsRouter.post(`/login`, loginUser);
 viewsRouter.get(`/register`, vistaRegister);
 viewsRouter.post(`/register`, newRegister);
 viewsRouter.get(`/profile`, perfilUser);
-viewsRouter.get(`/logout`, logout);
+viewsRouter.get(`/logout`, logoutUser);
 viewsRouter.get(`/subirarch`, subirArch);
 viewsRouter.post(`/subirarch`, newSubirArch);
-viewsRouter.get(`/changePassword`, changePassword) //vista
-viewsRouter.post(`/changePassword`, resetPassword )
+viewsRouter.get(`/resetPassword`, viewResetPassword)
+viewsRouter.post(`/resetPassword`, resetPassword);
+viewsRouter.get("/changePassword/:token", viewsChangePassword);
+viewsRouter.post("/changePassword", changePassword);
 viewsRouter.get(`/messages`, messageVista);
-viewsRouter.post(`/messages`, message);
+viewsRouter.post(`/messages`, message); 
 viewsRouter.post(`/messages`, sendMessage);
 viewsRouter.get(`/users`, userAll);
 viewsRouter.get(`/products`, productsAll);
-viewsRouter.get("/product/:id", productDetail );
-viewsRouter.get(`/carts/:cid`, cartDetail);
+viewsRouter.get(`/product/:pid`, productDetail);
+viewsRouter.get(`/carts/:cid`, cartDetail, cartVista);
+viewsRouter.get(`/`, vistaInicio)
+
+
+
+//viewsRouter.get(`/carts`, cartVista)
+
 
 //Pendientes
+
+
+// //Socket View
+// viewsRouter.use("./realtimeproducts", (req, res)=>{
+//   res.status(200), render(`realTimeProduct`)
+// })
+
+// // //Handelbars View
+// viewsRouter.get("/", (req, res)=>{
+//   res.status(200), render(`home`)
+// })
+
+
 
 viewsRouter.get(`/ticket`, (req, res) => {
   res.render(`tickets`);

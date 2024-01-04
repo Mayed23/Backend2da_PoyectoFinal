@@ -35,7 +35,7 @@ sessionsRouter.get(`/failregister`, (req, res) => {
 });
 
 
-sessionsRouter.get(`/logout`, async (req, res) =>{
+sessionsRouter.post(`/logout`, async (req, res) =>{
     try{
         req.session.destroy((error) => {
             if(error) {

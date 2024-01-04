@@ -7,7 +7,7 @@ const private_key = privateKey
 
 
 const generateToken = (user) => {
-    const token = jwt.sign({ user }, private_key, { expiresIn: `24h`})
+    const token = jwt.sign({ user }, private_key, { expiresIn: `2h`})
     return token
 }
 

@@ -1,4 +1,4 @@
-const { messgeService } = require("../routes/service/service")
+const { messgeService } = require("../service/service.js")
 
 class MessageController{
 

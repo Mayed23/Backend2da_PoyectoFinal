@@ -5,6 +5,8 @@ const cookieParser = require (`cookie-parser`)
 const path = require (`path`)
 const session = require (`express-session`)
 const passport = require(`passport`)
+const swaggerJSDoc = require("swagger-jsdoc")
+const swaggerUiExpress = require("swagger-ui-express")
 
 const { Socket } = require("dgram")
 const FileStore = require (`session-file-store`)
@@ -17,9 +19,13 @@ const { initializePassport } = require (`../src/config/passportJwt.js`)
 const {  configObject: {  port, connectDb, cookiekey }}= require("./config/confi.js")
 const errorHandleMidd = require("./middleware/error/indexError.js")
 const { addlogger, logger } = require("./utils/loggers.js")
+const { productService, messgeService } = require("./service/service.js")
+
 
 
 const app = express()
+
+
 const PORT = port || 8080
 
 
@@ -52,9 +58,6 @@ app.use(passport.initialize())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-// app.use(`/`, (req, res)=>{
-//     res.send(`hola`)
-// })
 
 //******MIDDLEWARES **********/
 //configuracion handlebars
@@ -87,6 +90,23 @@ app.use(cookieParser(cookiekey))
 //     saveUninitialized: true
 // })) 
 
+//Configuración de Swagger
+
+const swaggerOptions = {
+    definition: {
+      openapi: `3.0.1`,
+      info: {
+        title: `Documentación de la API`,
+        description: `Documentación de la API, aplicado a Productos y Carrito de compra`,
+      },
+    },
+    apis: [`./docs/**/*.yaml`],
+  };
+  
+const specs = swaggerJSDoc(swaggerOptions);
+
+app.use(`/docs`, swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
+
 
 
 app.use(addlogger)
@@ -101,3 +121,36 @@ const httpServer = app.listen(PORT, () => {
     
 })
 const socketServer = new Server(httpServer)
+
+    socketServer.on(`connection`, async (socket) => {
+    logger.info(`Clirnte Conectado`);
+
+const products = productService.get();
+
+    socket.emit(`products`, products.docs); 
+
+const messages = await messgeService.getByMessages()
+    
+    socket.emit(`messages`, messages)
+
+    socket.on(`new-Product`, async (data) => {
+        await productService.create(data);
+        const products = await productService.get()
+        socketServer.emit(`products`, products.docs)
+    })
+
+    socket.on(`delete`, async (id) => {
+        await productService.delete(id);
+        const products = await productService.get()
+        socketServer.emit(`products`, products.docs)
+    })
+
+    socket.on(`chatMessage`, async (data) => {
+        await messgeService.addMessages(data)
+        const messages = await messgeService.getMessages()
+        socket.emit(`messages`, messages)
+
+    })
+
+
+})

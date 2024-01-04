@@ -1,6 +1,5 @@
 const UserDto = require("../Dto/user.dto.js")
-const { userService } = require("../routes/service/service.js")
-const {create} = require("../utils/errors/CustomError.js")
+const { userService } = require("../service/service.js")
 const { logger } = require("../utils/loggers.js")
 
 class UserController{
@@ -79,6 +78,7 @@ class UserController{
            
         }catch(error){
             logger.error(error)
+            res.status(500).json({error: `Server internal error`})
         } 
     }
 

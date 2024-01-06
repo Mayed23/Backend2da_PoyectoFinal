@@ -60,7 +60,7 @@ GET  http://localhost:8080/api/users
 
 
 ###
-POST  http://localhost:8080/api/carts
+DELETE  http://localhost:8080/api/carts/659082d7d41962131263027a
 
 
 
@@ -113,17 +113,28 @@ Content-Type: application/json
 
 
 ###
-POST  http://localhost:8080/api/carts/652b094008c04721038bafad/purchase
-Content-Type: application/json
+PUT  http://localhost:8080/api/products/6595639b9062ec1a327e5b95
 
-  
-
-
+{
+   "_id": "6595639b9062ec1a327e5b95",
+    "title": "Kit, Bomba de Gasolina",
+    "price": 30,
+    "description": "Modelo test cambiado",
+    "thumbnail": "src/public/image/1696984040162-kitbomba.png",
+    "status": true,
+    "stock": 5,
+    "code": "1225",
+    "category": "1",
+    "owner": "jperez@gmail.com",
+    "__v": 0,
+    "id": "6595639b9062ec1a327e5b95"
+}
 
 
 
 ###
-GET http://localhost:8080/api/messages
+GET http://localhost:8080/api/products
+
 
 ###
 POST  http://localhost:8080/api/messages
@@ -149,8 +160,7 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:8080/api/users/email/pp88@gmail.com
-
+GET  http://localhost:8080/api/users/premium/658f78886532bfee4bdcd2ab
 
 ###
 GET  http://localhost:8080/api/users

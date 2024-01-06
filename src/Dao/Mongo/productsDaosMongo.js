@@ -9,7 +9,12 @@ module.exports = class ProductDaoMongo {
   //   return await this.model.find();
   // };
 
-  create = async (newProduct) => {
+  create = async (code, newProduct) => {
+    
+    const existCode = await this.model.findOne(code)
+    if(existCode){
+      return `Código ya Existe`
+    }
     return await this.model.create(newProduct);
   };
 

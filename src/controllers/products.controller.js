@@ -77,10 +77,9 @@ class ProductsController{
         
         res.send({ status: 'error', error: 'Ingrese todos los campos'})
         }
-        const prodNew = await this.productService.create(newProduct)
-        res.status(200).json({ status: 'error', error: 'Ingrese todos los campos'})
-        
-        res.status(200).json(prodNew)
+        const prodNew = await this.productService.create({ ...newProduct, owner: req.session.user._id})
+              
+         res.status(200).json(prodNew)
     }catch(error){
         logger.error('Error al agregar producto:', error);
         return 'Error al agregar el producto';

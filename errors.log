@@ -182,3 +182,171 @@ error: Error al agregar producto: Cannot set headers after they are sent to the 
 error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:81:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
 error: undefined {"cause":"one or more properties were incomplete or not valid.\n    List of require properties:\n    * title nedds to be a string, recived undefined\n    * description: nedds to be a string, recived undefined\n    * price: nedds to be a string, recived undefined","code":4,"name":"Error mock"}
 error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:83:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: code is not defined {"stack":"ReferenceError: code is not defined\n    at ProductDaoMongo.create (/home/mesteves/Escritorio/integracion-2/src/Dao/Mongo/productsDaosMongo.js:13:48)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:81:55)\n    at Layer.handle [as handle_request] (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/layer.js:95:5)\n    at next (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/route.js:144:13)\n    at Route.dispatch (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/route.js:114:3)\n    at Layer.handle [as handle_request] (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/layer.js:95:5)\n    at /home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/index.js:284:15\n    at Function.process_params (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/index.js:346:12)\n    at next (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/index.js:280:10)\n    at Function.handle (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/router/index.js:175:3)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:84:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:84:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:84:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:84:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:84:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:89:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:89:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:84:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:85:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: Error al agregar producto: Cannot set headers after they are sent to the client {"code":"ERR_HTTP_HEADERS_SENT","stack":"Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client\n    at new NodeError (node:internal/errors:399:5)\n    at ServerResponse.setHeader (node:_http_outgoing:662:11)\n    at ServerResponse.header (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:794:10)\n    at ServerResponse.send (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:174:12)\n    at ServerResponse.json (/home/mesteves/Escritorio/integracion-2/node_modules/express/lib/response.js:278:15)\n    at createProducts (/home/mesteves/Escritorio/integracion-2/src/controllers/products.controller.js:84:29)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"premiun\"","value":"premiun","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"premiun\"","value":"premiun","valueType":"string"}
+error: {
+  _id: new ObjectId("6589bd566547da413f6d4535"),
+  title: 'Kit, Bomba de Gasolina',
+  price: 30,
+  description: 'Silverado',
+  thumbnail: 'img4',
+  status: true,
+  stock: 2,
+  code: '1223',
+  category: '1',
+  __v: 0,
+  owner: 'jperez@gmail.com'
+}
+error: {
+  _id: new ObjectId("6589bd566547da413f6d4535"),
+  title: 'Kit, Bomba de Gasolina',
+  price: 30,
+  description: 'Silverado',
+  thumbnail: 'img4',
+  status: true,
+  stock: 2,
+  code: '1223',
+  category: '1',
+  __v: 0,
+  owner: 'jperez@gmail.com'
+}
+error: {
+  owner: 'admin',
+  _id: new ObjectId("6589bea26547da413f6d4539"),
+  title: 'Kit, Bomba de Gasolina',
+  price: 30,
+  description: 'Spark01',
+  thumbnail: 'src/public/image/1696984040162-kitbomba.png',
+  status: true,
+  stock: 5,
+  code: '1225',
+  category: '1',
+  __v: 0
+}
+error: {
+  _id: new ObjectId("6589bea26547da413f6d4539"),
+  title: 'Kit, Bomba de Gasolina',
+  price: 30,
+  description: 'Spark01',
+  thumbnail: 'src/public/image/1696984040162-kitbomba.png',
+  status: true,
+  stock: 5,
+  code: '1225',
+  category: '1',
+  __v: 0,
+  owner: 'jperez@gmail.com'
+}
+error: {
+  _id: new ObjectId("6595639b9062ec1a327e5b95"),
+  title: 'Kit, Bomba de Gasolina',
+  price: 30,
+  description: 'Modelo test cambiado',
+  thumbnail: 'src/public/image/1696984040162-kitbomba.png',
+  status: true,
+  stock: 5,
+  code: '1225',
+  category: '1',
+  __v: 0,
+  owner: 'admin'
+}
+error: {
+  _id: new ObjectId("6595639b9062ec1a327e5b95"),
+  title: 'Kit, Bomba de Gasolina',
+  price: 30,
+  description: 'Modelo test cambiado',
+  thumbnail: 'src/public/image/1696984040162-kitbomba.png',
+  status: true,
+  stock: 5,
+  code: '1225',
+  category: '1',
+  __v: 0,
+  owner: 'admin'
+}
+error: {
+  _id: new ObjectId("6595639b9062ec1a327e5b95"),
+  title: 'Kit, Bomba de Gasolina',
+  price: 30,
+  description: 'Modelo test cambiado',
+  thumbnail: 'src/public/image/1696984040162-kitbomba.png',
+  status: true,
+  stock: 5,
+  code: '1225',
+  category: '1',
+  __v: 0,
+  owner: 'admin'
+}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined
+error: undefined
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"login\"","value":"login","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"login\"","value":"login","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"login\"","value":"login","valueType":"string"}
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"login\"","value":"login","valueType":"string"}
+error: undefined {"kind":"Number","path":"total","reason":{"actual":false,"code":"ERR_ASSERTION","expected":true,"generatedMessage":true,"operator":"=="},"stringValue":"\"NaN\"","value":null,"valueType":"number"}

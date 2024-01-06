@@ -16,117 +16,121 @@ const localStrategy = local.Strategy
 
 
 const initializePassport = () => {
-    //Extraer el token de  la cookie
-    const cookieExtrator = req => {
-        let token = null 
-            //logger.info(`cookie extractor:`. req.cookie)
-        if (req && req.cookies) {
-            token = req.cookies[`cookieToken`]
-                logger.info(`token extraxtros:`, token)
-        }
-        return token
-    }
-    
+  //Extraer el token de  la cookie
+  const cookieExtrator = req => {
+      let token = null 
+          //logger.info(`cookie extractor:`. req.cookie)
+      if (req && req.cookies) {
+          token = req.cookies[`cookieToken`]
+              logger.info(`token extraxtros:`, token)
+      }
+      return token
+  }
+  
 
-    //middleware de passport
-    passport.use(`jwt`, new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtrator]),
-        secretOrKey: process.env.PRIVATE_KEY
-    }, async (jwt_payload, done) => {
+  //middleware de passport
+  passport.use(`jwt`, new JWTStrategy({
+      jwtFromRequest: ExtractJWT.fromExtractors([cookieExtrator]),
+      secretOrKey: process.env.PRIVATE_KEY
+  }, async (jwt_payload, done) => {
+      try{
+          return done(null, jwt_payload)
+      }catch(error){
+          return done(error)
+      }
+  }))
+  passport.use (
+      `register`,
+      new localStrategy({ passReqToCallback: true, usernameField: `email`}, async (req, username, password, done) => {
+        const { first_name, last_name, age, email, role } = req.body
         try{
-            return done(null, jwt_payload)
-        }catch(error){
-            return done(error)
-        }
-    }))
-    passport.use (
-        `register`,
-        new localStrategy({ passReqToCallback: true, usernameField: `email`}, async (req, username, password, done) => {
-          const { first_name, last_name, age, email } = req.body
-          try{
-            let user = await userService.getByEmail(username)
-            if (user) {
-              logger.info(`Usuario ya existe`)
-              return done (null,false)
-            }
-            const newUser = {
-              first_name,
-              last_name,
-              age,
-              email,
-              password: createHash(password),
-              role
-            }
-            let result = await userService.create(newUser)
-            return done(null, result)
-          }catch(error){
-            return done(`Error al ingresar el usuario` + error)
-          } 
-        })
-    )
-
-    passport.use(`login`, new localStrategy({usernameField: `email`}, async (username, password, done) =>{
-        try{
-          const user = await userService.getByEmail(username)
-          if (!user){
-            logger.info(`EL usuario no Existe`)
-            return( null, false)
+          let user = await userService.getByEmail(username)
+          if (user) {
+            logger.info(`Usuario ya existe`)
+            return done (null, false)
           }
-          if(!isValidPass(user, password)) return done (null, false)
-          return (null, user)
-    
-        }catch (error){
-          return done(`Error, datos incorrectos` + error )
-        }
-    }))
-    
-    
-
-    passport.use(`github`, new GitHubStrategy({
-        clientID: process.env.CLIENT_ID,
-        clientSecret: process.env.CLIENT_SECRET,
-        callbackURL: process.env.CALLBACK_URL 
-    }, async (accessToken, refreshToken, profile, done) => {
-        //console.log(`profile:`, profile)
-        try{
-        const user = await userService.getByEmail(profile._json.email)
-        logger.info(user)
-        if(!user){
-            const email = profile._json.email 
-            const newUser = {
-            first_name: profile._json.name,
-            last_name: ``,
-            age: 18,
+          // crear carrito para el usuario
+          const cart = await cartService.create({ products: [] });
+          const newUser = {
+            first_name,
+            last_name,
+            age,
             email,
-            password: ``,
-            role: ``,
-            }
-            const result = await userService.create(newUser)
-            return done(null, result)
-        }
-        return done(null, user)
-
+            password: createHash(password),
+            role,
+            cart: cart._id,
+          }
+          let result = await userService.create(newUser)
+          console.log(result);
+          return done(null, result)
         }catch(error){
-        return done(`Error, datos incorrectos` + error )
+          return done(`Error al ingresar el usuario` + error)
+        } 
+      })
+  )
+
+  passport.use(`login`, new localStrategy({usernameField: `email`}, async (username, password, done) =>{
+      try{
+        const user = await userService.getByEmail(username)
+        if (!user){
+          logger.info(`EL usuario no Existe`)
+          return done (null, false)
         }
-    })) 
+        if (!isValidPass(password, user)){
+          logger.info(`Contraseña incorrecta`)
+          return done (null, false)
+        }
+
+        return done(null, user)
+       
+      }catch (error){
+        return done(`Error, datos incorrectos` + error.message)
+      }
+  }))
+  
+
+  passport.use(`github`, new GitHubStrategy({
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: process.env.CALLBACK_URL 
+  }, async (accessToken, refreshToken, profile, done) => {
+      //console.log(`profile:`, profile)
+      try{
+      const user = await userService.getByEmail(profile._json.email)
+      logger.info(user)
+      if(!user){
+          const email = profile._json.email 
+          const newUser = {
+          first_name: profile._json.name,
+          last_name: ``,
+          age: 18,
+          email,
+          password: ``,
+          role: ``,
+          }
+          const result = await userService.create(newUser)
+          return done(null, result)
+      }
+      return done(null, user)
+
+      }catch(error){
+      return done(`Error, datos incorrectos` + error )
+      }
+  })) 
+  
+  passport.serializeUser((user, done) => {
+      done(null, user) // null: indica que no hay error, _id: id del usuario
+    })
     
-    passport.serializeUser((user, done) => {
-        done(null, user) // null: indica que no hay error, _id: id del usuario
-      })
-      
-      passport.deserializeUser(async(id, done) => {
-        let user = await userService.getById(id)
-        done(null, user._id)
-      })
+    passport.deserializeUser(async(id, done) => {
+      let user = await userService.getById(id)
+      done(null, user._id)
+    })
 
 
 
 }   
 
-
-
 module.exports = {
-    initializePassport
+  initializePassport
 }
-

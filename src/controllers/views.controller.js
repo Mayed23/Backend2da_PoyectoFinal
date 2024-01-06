@@ -138,8 +138,8 @@ const logoutUser = async (req, res) => {
     req.session.destroy((error) => {
       if (error) {
         return res.json({
-          status: `Cesion no se ha cerrado correctamente`,
-          body: message,
+          status: `Sesión no se ha cerrado correctamente`,
+          body: `message`,
         });
       }
       res.redirect(`/login`);

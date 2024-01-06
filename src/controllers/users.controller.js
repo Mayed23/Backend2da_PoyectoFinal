@@ -90,7 +90,7 @@ class UserController{
                 msg:`Usuario no encontrado`
             });
 
-            await userService.changeRole(user.email);
+            await userService.updateRole(user.email);
             const userUpdate = await userService.getById(id)
             res.status(200).json({ status: " success", msg: "El rol se ha cambiado exitosamente", newRole: userUpdate.role})
         }catch(error){

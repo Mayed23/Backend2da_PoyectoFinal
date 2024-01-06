@@ -64,21 +64,42 @@ class CartsController{
       }
   }
   
-    deleteCarts = async (req, res) => {
-        let {id} = req.params
-        try {
-            const cartId = await this.cartService.getById(id);
-            if (!cartId) {
-              return "Carrito no encontrado";
-            }
-            await cartService.delete({ _id: id });
-            res.status(200).json({
-                msg: `Se ha eliminado correctamente Cart : ${id}`
-            });
-          } catch (error) {
-            return error;
-          } 
+  deleteCarts = async (req, res) => {
+    let { id } = req.params;
+    try {
+      // Obtener el carrito antes de eliminarlo
+      const cart = await this.cartService.getById(id);
+
+      if (!cart) {
+        return res.status(404).json({
+          error: "Carrito no encontrado",
+        });
+      }
+
+      // Eliminar el carrito
+      await this.cartService.delete({ _id: id });
+
+      // Devolver productos al inventario
+      for (const product of cart.products) {
+        const productId = product.id;
+        const productInInventory = await productService.getById(productId);
+
+        if (productInInventory) {
+          // Incrementar el stock en el inventario
+          await productService.update({ _id: productId }, { stock: productInInventory.stock + product.quantity });
+        }
+      }
+
+      return res.status(200).json({
+        msg: `Se ha eliminado correctamente el carrito y se ha devuelto el stock al inventario`,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        error: "Error interno del servidor",
+      });
     }
+  };
 
     
 
@@ -86,7 +107,7 @@ class CartsController{
         try {
           const carId = req.params.cid || 0;
           const prodId = req.params.pid;
-
+          
           const result = await cartService.addProductToCart(carId, prodId);
 
           if (result.hasOwnProperty('error')) {
@@ -116,9 +137,14 @@ class CartsController{
       
           
           const product = await productService.getById(prodId);
+
           if (!product) return res.status(404).json({ 
             message: `Producto no encontrado`
          });
+
+         if(product.prodId.owner === user.email){
+          return res.status(403).json({ msg: "No puede agregar un producto propio al carrito" });
+         }
       
           const result = await cartService.addProductToCart(user.cart, prodId);
           res.status(200).json({ 

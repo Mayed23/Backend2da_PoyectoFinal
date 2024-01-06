@@ -1,0 +1,67 @@
+paths:
+  /api/products/{pid}:
+    get:
+      sumary: Obtiene un Producto
+      tags:
+        - Products
+      parameters:
+        - in: path
+          name: pid
+          schema:
+            type: string
+          required: true
+          description: Id del producto  
+      response:
+        "200"
+          description: El Producto fue obtenido
+        "500"
+          description: Error interno del Server
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Products'
+components:
+  schemas:  
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id generado por MongoDB
+        title:
+          type: String
+          description: Nombre del Producto
+        price:
+          type: number
+          description: Precio del producto
+        thumbnail:
+          type: string
+          description: URL de la imagen del producto
+        status:
+          type: boolean
+          description: Estado del producto
+        stock:
+          type: number
+          description: Cantidad de productos en stock
+        code:
+          type: string
+          description: Código único del producto
+        category:
+          type: string
+          description: Categoría del producto
+        owner:
+          type: string
+          description: Propietario producto
+        example:
+          _id: 6589bc136547da413f6d452f
+          title: "Filtro de Gasolina" 
+          price: 15
+          description: "Corsa"
+          thumbnail: "img1"
+          status: true
+          stock: 13
+          code: "1220"
+          category: "2"
+          oenwr: "jperezqgmail.com"

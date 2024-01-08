@@ -27,7 +27,8 @@ GET   http://localhost:8080/api/products/652e90552274c45611fa49c3
  
 
 ###
-GET http://localhost:8080/api/carts
+GET http://localhost:8080/sessions/logout
+
 
 ###
 POST http://localhost:8080/api/carts
@@ -43,12 +44,11 @@ Content-Type: application/json
 
 
 ###
-GET http://localhost:8080/api/carts/652b091e08c04721038bafab
+GET http://localhost:8080/api/carts/659060e29ef695d83222d49a
 
 
 ###
-POST   http://localhost:8080/api/carts/652b091e08c04721038bafab/product/655e7f3b271f147cd5cf70fb
-
+POST   http://localhost:8080/api/carts/659060e29ef695d83222d49a
 {
 
     "id": "655e7f3b271f147cd5cf70fb",
@@ -56,11 +56,11 @@ POST   http://localhost:8080/api/carts/652b091e08c04721038bafab/product/655e7f3b
 }
 
 ###
-GET  http://localhost:8080/api/users
+GET  http://localhost:8080/api/users/659060e29ef695d83222d49a
 
 
 ###
-DELETE  http://localhost:8080/api/carts/659082d7d41962131263027a
+DELETE  http://localhost:8080/api/carts/6598987ee696442e4b8cde3a
 
 
 

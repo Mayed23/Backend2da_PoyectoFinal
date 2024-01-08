@@ -20,6 +20,7 @@ const {  configObject: {  port, connectDb, cookiekey }}= require("./config/confi
 const errorHandleMidd = require("./middleware/error/indexError.js")
 const { addlogger, logger } = require("./utils/loggers.js")
 const { productService, messgeService } = require("./service/service.js")
+const { specs } = require("./config/configSwagger.js")
 
 
 
@@ -92,18 +93,6 @@ app.use(cookieParser(cookiekey))
 
 //Configuración de Swagger
 
-const swaggerOptions = {
-    definition: {
-      openapi: `3.0.1`,
-      info: {
-        title: `Documentación de la API`,
-        description: `Documentación de la API, aplicado a Productos y Carrito de compra`,
-      },
-    },
-    apis: [`./docs/**/*.yaml`],
-  };
-  
-const specs = swaggerJSDoc(swaggerOptions);
 
 app.use(`/docs`, swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 

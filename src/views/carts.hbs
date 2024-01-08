@@ -4,26 +4,21 @@
   <p>Usuario: {{username}}</p>
 {{/if}}
 
-
 <table class="table table-striped">
     <thead>
         <tr>
-            <img src="#" alt="">
-            <th>Nombre </th>
-            <th>Descripción</th>
-            <th>Precio $</th>
+            <th>Producto</th>
+            <th>Precio</th>
             <th>Cantidad</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-
         {{#each productList}}
-            <tr>                    
-                <td>{{title}}</td>
-                <td>{{description}}</td>
-                <td>{{price}}</td>
-                <td>{{quantity}}</td>
-            </tr>
+        <tr>
+            <td>{{productList.title}}</td>
+            <td>{{roductList.price}}</td>
+            <td>{{quantity}}</td>
+        </tr>
         {{/each}}
     </tbody>
-</table>

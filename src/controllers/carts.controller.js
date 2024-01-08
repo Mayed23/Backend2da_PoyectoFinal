@@ -1,4 +1,3 @@
-const cart = require("../Dao/Mongo/models/carts.model.js");
 const { cartService, productService, userService } = require("../service/service.js");
 const { logger } = require("../utils/loggers.js");
 
@@ -103,108 +102,108 @@ class CartsController{
 
     
 
-    createProductToCarts = async (req, res) => {
-        try {
-          const carId = req.params.cid || 0;
-          const prodId = req.params.pid;
-          
-          const result = await cartService.addProductToCart(carId, prodId);
-
-          if (result.hasOwnProperty('error')) {
-            throw new Error(result.error.msg);
-          }
-
-          logger.info(result);
-          res.json({ message: 'Producto agregado al carrito', cart: result});
-        } catch (error) {
-          logger.error(error);
-          res.status(500).send(error.message);
-        }
-      };
-     
-      createProductInUserCart = async (req, res) => {
-        try {
-          const prodId = req.params.pid;
-          const user = req.session;
-
-          if (!user.cart) {
-            const newCart = await cartService.create();
-            user.cart = newCart._id; 
-            await userService.update(user._id, { cart: newCart._id });
-          }
-
-          logger.info(newCart)
+  createProductToCarts = async (req, res) => {
+    try {
+      const carId = req.params.cid || 0;
+      const prodId = req.params.pid;
       
-          
-          const product = await productService.getById(prodId);
+      const result = await cartService.addProductToCart(carId, prodId);
 
-          if (!product) return res.status(404).json({ 
-            message: `Producto no encontrado`
-         });
+      if (result.hasOwnProperty('error')) {
+        throw new Error(result.error.msg);
+      }
 
-         if(product.prodId.owner === user.email){
-          return res.status(403).json({ msg: "No puede agregar un producto propio al carrito" });
-         }
-      
-          const result = await cartService.addProductToCart(user.cart, prodId);
-          res.status(200).json({ 
-          message: `Producto agregado al carrito`, products: result.cart.products 
-          });
-        } catch (error) {
-          logger.error(error);
-          res.status(500).send(error.message);
-        }
-      };
-      
-
-
-    deleteProdCarts =async (req, res) => {
-        const carId = req.params.cid
-        const prodId = req.params.pid
-        try{
-          const cart = await this.cartService.getById(carId);
-          if(!cart) res.status(404).json({ 
-            message: `Carrito no encontrado`
-          });
-
-          const product = await productService.getById(prodId);
-          if (!product) return res.status(404).json({ 
-            message: `Producto no encontrado`
-          });
-          console.log(product)
-
-          const prodInCart = cart.products.filter((products) => products.product === prodId);
-          if(!prodInCart) return res.status(404).json({
-            message: "Producto no existe en carrito"
-          });
-          console.log(prodInCart)
-
-          await cartService.deleteProdToCart(carId.prodId)
-          res.status(200).json({
-            msg: `Producto eliminado del carrito`, prodInCart})
-        }catch(error){
-          logger.error(error)
-        }
-        
+      logger.info(result);
+      res.json({ message: 'Producto agregado al carrito', cart: result});
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send(error.message);
     }
+  };
+    
+  createProductInUserCart = async (req, res) => {
+    try {
+      const prodId = req.params.pid;
+      const user = req.session;
 
-    purchaseCart = async (req, res) => {
-        const carId = req.params.cid;
-        const user =  req.session;
-        
-        try{
-            const cart = await this.cartService.getById(carId);
-            console.log(`esto es `, cart)
-            if(!cart) return res.status(404).json({message: `carrito no encontrado`})
+      if (!user.cart) {
+        const newCart = await cartService.create();
+        user.cart = newCart._id; 
+        await userService.update(user._id, { cart: newCart._id });
+      }
 
-            const result = await cartService.purchaseCart(carId, user)
+      logger.info(newCart)
+  
+      
+      const product = await productService.getById(prodId);
 
-            res.status(200).json({ message: `Compra realizada`, result})
-        }catch(error){
-          logger.error(error)
-            res.status(500).send(error.message)
-        }
+      if (!product) return res.status(404).json({ 
+        message: `Producto no encontrado`
+      });
+
+      if(product.prodId.owner === user.email){
+      return res.status(403).json({ msg: "No puede agregar un producto propio al carrito" });
+      }
+  
+      const result = await cartService.addProductToCart(user.cart, prodId);
+      res.status(200).json({ 
+      message: `Producto agregado al carrito`, products: result.cart.products 
+      });
+    } catch (error) {
+      logger.error(error);
+      res.status(500).send(error.message);
     }
+  };
+  
+
+
+  deleteProdCarts =async (req, res) => {
+    const carId = req.params.cid
+    const prodId = req.params.pid
+    try{
+      const cart = await this.cartService.getById(carId);
+      if(!cart) res.status(404).json({ 
+        message: `Carrito no encontrado`
+      });
+
+      const product = await productService.getById(prodId);
+      if (!product) return res.status(404).json({ 
+        message: `Producto no encontrado`
+      });
+      console.log(product)
+
+      const prodInCart = cart.products.filter((products) => products.product === prodId);
+      if(!prodInCart) return res.status(404).json({
+        message: "Producto no existe en carrito"
+      });
+      console.log(prodInCart)
+
+      await cartService.deleteProdToCart(carId.prodId)
+      res.status(200).json({
+        msg: `Producto eliminado del carrito`, prodInCart})
+    }catch(error){
+      logger.error(error)
+    }
+      
+  }
+
+  purchaseCart = async (req, res) => {
+    const carId = req.params.cid;
+    const user =  req.session;
+    
+    try{
+        const cart = await this.cartService.getById(carId);
+        console.log(`esto es `, cart)
+        if(!cart) return res.status(404).json({message: `carrito no encontrado`})
+
+        const result = await cartService.purchaseCart(carId, user)
+
+        res.status(200).json({ message: `Compra realizada`, result})
+    }catch(error){
+      logger.error(error)
+        res.status(500).send(error.message)
+    }
+  }
 
 }
 

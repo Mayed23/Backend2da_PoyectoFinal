@@ -10,6 +10,7 @@ const swaggerOptions = {
         },
       },
     apis: ["/docs/**/*.yaml"],
+ 
 };
 
 const specs = swaggerJSDoc(swaggerOptions)

@@ -13,6 +13,7 @@ module.exports = class CartsDaoMongo {
     };
   }
 
+  
   get = async () => {
     return await this.model.cart.find({});
   };
@@ -38,25 +39,30 @@ module.exports = class CartsDaoMongo {
     return await this.model.cart.deleteOne({ _id: id });
   };
 
-
   sumTotal = async (cid) => {
-    
-    const cart = await this.model.cart.findById(cid);
-    console.log(cart)
-
-    const total = cart.products.reduce((acc, product) => {
-      return acc + product.product.price * product.quantity;
+    const cart = await this.model.cart.findById(cid).populate("products.product");
+    console.log(cart);
+  
+    const total = cart.products.reduce((acc, productEntry) => {
+      const product = productEntry.product;
+  
+      if (product && product.price && productEntry.quantity) {
+        return acc + product.price * productEntry.quantity;
+      } else {
+        console.log(`Invalid values for product:`, productEntry);
+        return acc;
+      }
     }, 0);
-    console.log(typeof(product.price))
-    console.log(typeof(product.quantity)) 
-    console.log(total,`nnnn`)
-
+  
+    console.log(total);
+  
     // seteamos el total del carrito
     await this.model.cart.findOneAndUpdate({ _id: cid }, { $set: { total } });
-
-    
+  
     return total;
-  };
+  };  
+  
+  
 
   addProductToCart = async (cid, pid) => {
     
@@ -165,9 +171,7 @@ module.exports = class CartsDaoMongo {
 
     return total;
   };
-
+  
 };
-
-
 
 

@@ -1,5 +1,5 @@
 paths:
-  /api/products:
+  /api/products/:
     get:
       sumary: Obtiene todos los Productos
       tags:
@@ -14,7 +14,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Products'
+                  $ref: '#/components/schemas/roducts'
 components:
   schemas:  
     Product:

@@ -21,7 +21,10 @@ const {
   changePassword,
   viewResetPassword,
   resetPassword,
-  vistaInicio
+  vistaInicio,
+  userDelete,
+  userEdit,
+  //addToCart
   
   
    } = require("../controllers/views.controller.js");
@@ -46,9 +49,12 @@ viewsRouter.post("/changePassword", changePassword);
 viewsRouter.get(`/messages`, messageVista);
 viewsRouter.post(`/messages`, message); 
 viewsRouter.post(`/messages`, sendMessage);
-viewsRouter.get(`/users`, userAll);
+viewsRouter.get('/users', userAll);
+viewsRouter.get('/users/edit/:id', userEdit);
+viewsRouter.get('/users/delete/:id', userDelete);
 viewsRouter.get(`/products`, productsAll);
 viewsRouter.get(`/product/:pid`, productDetail);
+//viewsRouter.get(`/carts/:cid/product/:pid`, addToCart)
 viewsRouter.get(`/carts/:cid`, cartDetail, cartVista);
 viewsRouter.get(`/`, vistaInicio)
 

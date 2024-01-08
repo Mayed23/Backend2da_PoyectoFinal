@@ -6,6 +6,7 @@ const  passport  = require(`passport`)
 const sessionsRouter = Router()
 
 
+
 sessionsRouter.post(
   `/login`,
   passport.authenticate(`login`, {
@@ -36,6 +37,7 @@ sessionsRouter.get(`/failregister`, (req, res) => {
 
 sessionsRouter.get(`/logout`, async (req, res) => {
   try {
+    res.clearCookie(`cookiesToken`)
     req.session.destroy((error) => {
       if (error) {
         return res.status(500).json({ error: `La sesión no se ha cerrado correctamente` });
